@@ -237,7 +237,7 @@ const ProcessStep = ({ number, title, desc }) => (
     </div>
     <div className="mb-4 text-5xl font-bold text-white/5">{number}</div>
     <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
-    <p className="text-gray-400 leading-relaxed">{desc}</p>
+    <p className="text-white-400 leading-relaxed">{desc}</p>
   </div>
 );
 
