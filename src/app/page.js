@@ -235,9 +235,9 @@ const ProcessStep = ({ number, title, desc }) => (
     <div className="md:hidden absolute left-0 top-0 bottom-0 w-px bg-white/10">
        <div className="absolute top-0 left-[-4px] w-2 h-2 rounded-full bg-indigo-500"></div>
     </div>
-    <div className="mb-4 text-5xl font-bold text-white/5">{number}</div>
+    <div className="mb-4 text-5xl font-bold text-white/30">{number}</div>
     <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
-    <p className="text-white-400 leading-relaxed">{desc}</p>
+    <p className="text-gray-400 leading-relaxed">{desc}</p>
   </div>
 );
 
