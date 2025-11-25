@@ -271,7 +271,7 @@ export default function App() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
-              <span className="text-sm text-gray-300 font-medium tracking-wide">Accepting New Clients for 2025</span>
+              <span className="text-sm text-gray-300 font-medium tracking-wide">Accepting New Clients for 2026</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold tracking-tighter mb-8 leading-tight">
@@ -284,10 +284,18 @@ export default function App() {
             </p>
 
             <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
-              <button className="px-10 py-4 bg-white text-black rounded-full font-bold text-lg hover:bg-indigo-50 transition-all duration-300 flex items-center gap-2 group hover:scale-105 active:scale-95">
-                View Our Work
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+              <button
+  onClick={() => {
+    document.getElementById("work").scrollIntoView({
+      behavior: "smooth",
+    });
+  }}
+  className="px-10 py-4 bg-white text-black rounded-full font-bold text-lg hover:bg-indigo-50 transition-all duration-300 flex items-center gap-2 group hover:scale-105 active:scale-95"
+>
+  View Our Work
+  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+</button>
+
               <button className="px-10 py-4 bg-white/5 text-white border border-white/10 rounded-full font-bold text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-md hover:scale-105 active:scale-95">
                 Contact Sales
               </button>
