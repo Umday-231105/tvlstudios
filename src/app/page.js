@@ -185,9 +185,12 @@ const Navbar = () => {
               {item}
             </a>
           ))}
-          <button className="px-6 py-2.5 bg-white text-black rounded-full text-sm font-bold hover:bg-indigo-50 transition-all duration-300 hover:scale-105 active:scale-95">
-            Start Project
-          </button>
+          <button 
+  onClick={() => window.location.href = "/start-project"}
+  className="px-6 py-2.5 bg-white text-black ..."
+>
+  Start Project
+</button>
         </div>
 
         {/* Mobile Toggle */}
@@ -562,9 +565,12 @@ export default function App() {
                 <p className="text-xl text-gray-400 max-w-md mb-10">
                   Ready to elevate your brand? We are currently accepting new partnerships for Q3 2025.
                 </p>
-                <button className="px-10 py-5 bg-white text-black rounded-full font-bold text-lg hover:bg-indigo-500 hover:text-white transition-all duration-300 shadow-[0_0_40px_-10px_rgba(255,255,255,0.5)] hover:shadow-[0_0_50px_-10px_rgba(99,102,241,0.6)] hover:-translate-y-1">
-                  Start a Project
-                </button>
+                <button 
+  onClick={() => window.location.href = "/start-project"}
+  className="px-10 py-5 bg-white text-black ..."
+>
+  Start a Project
+</button>
               </div>
               <div className="grid grid-cols-2 gap-12 md:pl-20">
                 <div>
