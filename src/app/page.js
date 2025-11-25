@@ -446,7 +446,7 @@ export default function App() {
                   <div className="space-y-8">
                     <div className="flex items-center gap-4 mb-4">
                        <span className="text-xs font-bold tracking-widest text-indigo-400 uppercase border border-indigo-400/30 px-3 py-1 rounded-full bg-indigo-500/10">Youth Leadership & Debate Forum</span>
-                       <span className="text-gray-500 text-sm font-mono">2024</span>
+                       <span className="text-gray-500 text-sm font-mono">2025</span>
                     </div>
                     <h3 className="text-4xl font-bold group-hover:text-indigo-400 transition-colors duration-300">Open Word War</h3>
                     <p className="text-gray-400 leading-relaxed text-lg">
@@ -468,12 +468,12 @@ export default function App() {
               <div className="group grid grid-cols-1 md:grid-cols-2 gap-12 items-center md:flex-row-reverse">
                 <Reveal className="order-2 md:order-1 space-y-8">
                   <div className="flex items-center gap-4 mb-4">
-                     <span className="text-xs font-bold tracking-widest text-indigo-400 uppercase border border-indigo-400/30 px-3 py-1 rounded-full bg-indigo-500/10">AI Platform</span>
+                     <span className="text-xs font-bold tracking-widest text-indigo-400 uppercase border border-indigo-400/30 px-3 py-1 rounded-full bg-indigo-500/10">Homestay & Cabin Rentals</span>
                      <span className="text-gray-500 text-sm font-mono">2025</span>
                   </div>
-                  <h3 className="text-4xl font-bold group-hover:text-indigo-400 transition-colors duration-300">Cognition AI</h3>
+                  <h3 className="text-4xl font-bold group-hover:text-indigo-400 transition-colors duration-300">Jibhi Homestead Cabins</h3>
                   <p className="text-gray-400 leading-relaxed text-lg">
-                    Designed the interface for a leading LLM provider. The focus was on minimalism and reducing cognitive load while displaying complex data streams in real-time.
+                    Developed a fresh visual identity for Jibhi Homestead Cabins, creating nature-inspired graphic design assets that reflect their rustic, homely stay experience.
                   </p>
                   <ul className="flex flex-wrap gap-3">
                       {['Product Design', 'Frontend Architecture', 'Strategy', 'Dashboard'].map(tag => (
