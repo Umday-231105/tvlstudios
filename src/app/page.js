@@ -574,16 +574,13 @@ export default function App() {
                     <li><a href="#services" className="hover:text-white transition-colors">Services</a></li>
                     <li><a href="#process" className="hover:text-white transition-colors">Process</a></li>
                     <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors">Careers</a> <span className="ml-2 text-xs bg-white/10 px-2 py-0.5 rounded text-indigo-300">Hiring</span></li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="text-white font-bold mb-8 text-lg">Connect</h4>
                   <ul className="space-y-6 text-gray-400">
-                    <li><a href="#" className="hover:text-white transition-colors flex items-center gap-3"><Twitter size={20}/> Twitter</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors flex items-center gap-3"><Github size={20}/> GitHub</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors flex items-center gap-3"><Linkedin size={20}/> LinkedIn</a></li>
-                    <li><a href="mailto:hello@tvl.studio" className="hover:text-white transition-colors mt-4 block">hello@tvl.studio</a></li>
+                    <li><a href="#" className="hover:text-white transition-colors flex items-center gap-3"><Instagram size={20}/> Instagram</a></li>
+                    <li><a href="mailto:hello@tvl.studio" className="hover:text-white transition-colors mt-4 block">tvlstudioz@gmail.com</a></li>
                   </ul>
                 </div>
               </div>
