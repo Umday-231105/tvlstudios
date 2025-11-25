@@ -11,7 +11,7 @@ import {
   Cpu, 
   Aperture,
   MonitorPlay,
-  FaIntagram,
+  Intagram,
   Linkedin,
   ArrowRight,
   CheckCircle2,
@@ -578,7 +578,7 @@ export default function App() {
                 <div>
                   <h4 className="text-white font-bold mb-8 text-lg">Connect</h4>
                   <ul className="space-y-6 text-gray-400">
-                    <li><a href="#" className="hover:text-white transition-colors flex items-center gap-3"><FaInstagram size={20}/> Instagram</a></li>
+                    <li><a href="#" className="hover:text-white transition-colors flex items-center gap-3"><Instagram size={20}/> Instagram</a></li>
                     <li><a href="mailto:hello@tvl.studio" className="hover:text-white transition-colors mt-4 block">tvlstudioz@gmail.com</a></li>
                   </ul>
                 </div>
