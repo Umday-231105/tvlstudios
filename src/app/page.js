@@ -453,7 +453,7 @@ export default function App() {
                       A complete redesign of their visual identity, delivering polished and professional graphic design materials for both digital and print.
                     </p>
                     <ul className="flex flex-wrap gap-3">
-                      {['UI/UX', 'React Native', 'Branding', 'WebGL'].map(tag => (
+                      {['Graphic Design', 'Adobe Suite', 'Branding', 'Canva'].map(tag => (
                         <span key={tag} className="text-sm text-gray-400 border border-white/10 px-3 py-1 rounded-full">{tag}</span>
                       ))}
                     </ul>
