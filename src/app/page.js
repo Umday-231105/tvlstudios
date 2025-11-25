@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 // --- Constants & Utils ---
-const SMOOTH_TRANSITION = { duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }; // "Luxury" ease curve
+const SMOOTH_TRANSITION = { duration: 1.0, ease: [0.25, 0.1, 0.25, 1] }; // "Luxury" ease curve
 
 // --- Components ---
 
