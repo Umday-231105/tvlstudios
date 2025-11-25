@@ -297,7 +297,7 @@ export default function App() {
 </button>
 
               <button className="px-10 py-4 bg-white/5 text-white border border-white/10 rounded-full font-bold text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-md hover:scale-105 active:scale-95">
-                Contact Sales
+                Contact Us
               </button>
             </div>
           </Reveal>
@@ -309,7 +309,7 @@ export default function App() {
         <div className="container mx-auto px-6">
           <p className="text-center text-xs font-bold text-gray-600 mb-10 uppercase tracking-[0.2em]">Trusted by innovators</p>
           <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-60">
-             {['Acme Corp', 'Nebula', 'Vertex AI', 'Quantum', 'Echo Systems'].map((name, i) => (
+             {['Open Word War', 'Jibhi Homestead Cabins'].map((name, i) => (
                <div key={i} className="flex items-center gap-2 group cursor-default hover:opacity-100 transition-opacity duration-500">
                   <div className="w-6 h-6 rounded bg-white/20 group-hover:bg-indigo-500 transition-colors duration-500"></div>
                   <span className="text-lg font-bold text-white/80 font-mono">{name}</span>
