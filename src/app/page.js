@@ -476,7 +476,7 @@ export default function App() {
                     Developed a fresh visual identity for Jibhi Homestead Cabins, creating nature-inspired graphic design assets that reflect their rustic, homely stay experience.
                   </p>
                   <ul className="flex flex-wrap gap-3">
-                      {['Product Design', 'Frontend Architecture', 'Strategy', 'Dashboard'].map(tag => (
+                      {['Product Design', 'Graphic Design', 'Strategy', 'Dashboard'].map(tag => (
                         <span key={tag} className="text-sm text-gray-400 border border-white/10 px-3 py-1 rounded-full">{tag}</span>
                       ))}
                     </ul>
