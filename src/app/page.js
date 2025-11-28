@@ -615,7 +615,7 @@ export default function App() {
 
     <li>
       <a 
-        href="mailto:hello@tvl.studio" 
+        href="mailto:tvlstudioz@gmail.com" 
         className="hover:text-white transition-colors flex items-center gap-3"
       >
         <Mail size={20} />
