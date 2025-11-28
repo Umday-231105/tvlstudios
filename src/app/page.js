@@ -524,17 +524,17 @@ export default function App() {
                  {
                    quote: "TVL Studios transformed our vague ideas into a world-class digital product. The attention to detail is unmatched.",
                    author: "Sarah Jenkins",
-                   role: "CTO, Nova Banking"
+                   
                  },
                  {
                    quote: "The team moves fast but never breaks things. They are the perfect partner for high-growth startups.",
                    author: "David Chen",
-                   role: "Founder, Vertex AI"
+                  
                  },
                  {
                    quote: "We've worked with many agencies, but TVL is in a league of its own. Truly futuristic design work.",
                    author: "Elena Rodriguez",
-                   role: "VP Marketing, Quantum"
+                  
                  }
                ].map((item, i) => (
                  <Reveal key={i} delay={i * 0.1}>
