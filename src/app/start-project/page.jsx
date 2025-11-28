@@ -82,7 +82,7 @@ const Navbar = () => {
   );
 };
 
-// Footer (similar style to homepage footer)
+// Footer with more relatable copy
 const Footer = () => {
   return (
     <footer className="bg-black pt-24 pb-12 border-t border-white/10 relative overflow-hidden mt-24">
@@ -94,10 +94,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
           <div>
             <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-              Let&apos;s build the <br /> future.
+              Ready to start <br /> your project?
             </h2>
             <p className="text-lg text-gray-400 max-w-md">
-              Ready to elevate your brand? We are currently accepting new partnerships for Q1 2026.
+              Tell us about your website, brand, or idea. We&apos;ll review it and
+              get back to you with the next steps.
             </p>
           </div>
 
@@ -110,7 +111,7 @@ const Footer = () => {
               <ArrowRight size={18} />
             </button>
             <p className="text-xs text-gray-500">
-              Share a few details and we&apos;ll get back to you within 24 hours.
+              Share a few details and we&apos;ll usually respond within 24 hours.
             </p>
           </div>
         </div>
@@ -158,7 +159,8 @@ const Page = () => {
             Start Your Project
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Tell us what you&apos;re building — our team will get back within 24 hours with next steps.
+            Fill in a few details about what you need, and we&apos;ll reach out with ideas,
+            pricing, and timelines.
           </p>
         </motion.div>
 
@@ -232,7 +234,7 @@ const Page = () => {
               <label className="text-gray-300 font-medium">Project Details</label>
               <textarea
                 rows="5"
-                placeholder="Tell us about your vision…"
+                placeholder="Tell us what you&apos;re looking for, your goals, and any references you like…"
                 className="mt-2 bg-white/5 border border-white/10 p-4 rounded-xl w-full outline-none text-white"
               />
             </div>
@@ -240,11 +242,11 @@ const Page = () => {
             {/* Submit */}
             <div className="flex justify-between items-center flex-col md:flex-row gap-4">
               <p className="text-gray-500 text-sm max-w-md">
-                By submitting, you agree to let us contact you about this project.
+                By submitting, you agree that we may contact you about this project.
               </p>
               <button
                 type="submit"
-                className="px-12 py-4 bg-white text-black rounded-full text-sm font-semibold tracking-wide hover:bg-gray-100 md:hover:bg-white/90 md:text-black transition-all duration-300 flex items-center gap-2"
+                className="px-12 py-4 bg.white text-black rounded-full text-sm font-semibold tracking-wide hover:bg-gray-100 md:hover:bg-white/90 md:text-black transition-all duration-300 flex items-center gap-2"
               >
                 Submit
                 <ArrowRight size={18} />
@@ -254,7 +256,7 @@ const Page = () => {
         </motion.div>
       </div>
 
-      {/* Footer added here */}
+      {/* Footer */}
       <Footer />
     </div>
   );
