@@ -584,13 +584,33 @@ export default function App() {
                     <li><a href="#work" className="hover:text-white transition-colors">Our Work</a></li>
                   </ul>
                 </div>
-                <div>
-                  <h4 className="text-white font-bold mb-8 text-lg">Connect</h4>
-                  <ul className="space-y-6 text-gray-400">
-                    <li><a href="#" className="hover:text-white transition-colors flex items-center gap-3"><InstagramIcon size={20}/> Instagram</a></li>
-                    <li><a href="mailto:hello@tvl.studio" className="hover:text-white transition-colors mt-4 block"> <Mail size={20} /> tvlstudioz@gmail.com</a></li>
-                  </ul>
-                </div>
+<div>
+  <h4 className="text-white font-bold mb-8 text-lg">Connect</h4>
+  <ul className="space-y-6 text-gray-400">
+    
+    <li>
+      <a 
+        href="#" 
+        className="hover:text-white transition-colors flex items-center gap-3"
+      >
+        <InstagramIcon size={20} />
+        <span>Instagram</span>
+      </a>
+    </li>
+
+    <li>
+      <a 
+        href="mailto:hello@tvl.studio" 
+        className="hover:text-white transition-colors flex items-center gap-3"
+      >
+        <Mail size={20} />
+        <span>tvlstudioz@gmail.com</span>
+      </a>
+    </li>
+
+  </ul>
+</div>
+
               </div>
             </div>
           </Reveal>
