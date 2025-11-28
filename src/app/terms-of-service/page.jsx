@@ -151,7 +151,7 @@ export default function TermsOfServicePage() {
       <div className="relative z-10 container mx-auto px-6 py-28">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold mb-4">Terms of Service</h1>
-          <p className="text-gray-400 mb-10">Last Updated: [Insert Date]</p>
+          <p className="text-gray-400 mb-10">Last Updated: 28th November 2025</p>
 
           <div className="space-y-6 text-gray-300 leading-relaxed">
             <p>
@@ -261,7 +261,7 @@ export default function TermsOfServicePage() {
               If you have any questions about these Terms, you can contact us at:
             </p>
             <p>
-              <strong>Email:</strong> [Add your contact email here] <br />
+              <strong>Email:</strong> tvlstudioz@gmail.com <br />
               <strong>Company:</strong> TVL Studios <br />
               <strong>Founders:</strong> Uday Sood, Vishal Baibhav Panda <br />
               <strong>Co-Founder:</strong> Arnav Verma
