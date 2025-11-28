@@ -1,7 +1,7 @@
 'use client';
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Mail, User, Building2, PenTool, ArrowRight } from "lucide-react";
+import { Mail, User, Building2, PenTool, ArrowRight, Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,12 +31,11 @@ const Navbar = () => {
             </a>
           ))}
           <button 
-  onClick={() => window.location.href = "/start-project"}
-  className="px-6 py-2.5 bg-white text-black rounded-full text-sm font-bold hover:bg-indigo-50 transition-all duration-300 hover:scale-105 active:scale-95"
-
->
-  Start Project
-</button>
+            onClick={() => window.location.href = "/start-project"}
+            className="px-6 py-2.5 bg-white text-black rounded-full text-sm font-bold hover:bg-indigo-50 transition-all duration-300 hover:scale-105 active:scale-95"
+          >
+            Start Project
+          </button>
         </div>
 
         {/* Mobile Toggle */}
@@ -52,7 +51,7 @@ const Navbar = () => {
           animate={{ opacity: 1, y: 0 }}
           className="absolute top-full left-0 w-full bg-black/95 border-b border-white/10 p-6 flex flex-col gap-6 md:hidden backdrop-blur-xl"
         >
-           {['Work', 'Services', 'Process', 'About'].map((item) => (
+          {['Work', 'Services', 'Process', 'About'].map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMobileMenuOpen(false)} className="text-xl text-gray-300 hover:text-white">
               {item}
             </a>
@@ -66,6 +65,8 @@ const Navbar = () => {
 const Page = () => {
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
+
+      <Navbar />
 
       {/* Soft Glow Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-purple-900/20 blur-[90px]" />
