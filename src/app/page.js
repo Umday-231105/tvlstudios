@@ -383,9 +383,7 @@ export default function App() {
                   <p className="text-gray-400 text-lg mb-8">
                     Our methodology is built on transparency and velocity. We move from concept to code in record time without sacrificing quality.
                   </p>
-                  <button className="text-indigo-400 font-bold flex items-center gap-2 hover:text-white transition-colors">
-                    Download Capabilities Deck <ArrowRight size={16} />
-                  </button>
+                  
                </Reveal>
 
                <div className="space-y-12">
@@ -516,42 +514,59 @@ export default function App() {
 
       {/* Testimonials */}
       <section className="py-32 border-t border-white/5 relative z-10">
-         <div className="container mx-auto px-6">
-            <Reveal className="text-center mb-16">
-               <h2 className="text-3xl font-bold mb-4">Client Stories</h2>
-            </Reveal>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-               {[
-                 {
-                   quote: "TVL Studios transformed our vague ideas into a world-class digital product. The attention to detail is unmatched.",
-                   author: "Sarah Jenkins",
-                   
-                 },
-                 {
-                   quote: "The team moves fast but never breaks things. They are the perfect partner for high-growth startups.",
-                   author: "David Chen",
-                  
-                 },
-                 {
-                   quote: "We've worked with many agencies, but TVL is in a league of its own. Truly futuristic design work.",
-                   author: "Elena Rodriguez",
-                  
-                 }
-               ].map((item, i) => (
-                 <Reveal key={i} delay={i * 0.1}>
-                    <div className="p-8 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-sm relative">
-                       <MessageSquare className="absolute top-8 right-8 text-white/10 w-8 h-8" />
-                       <p className="text-gray-300 mb-6 text-lg leading-relaxed">"{item.quote}"</p>
-                       <div>
-                          <div className="text-white font-bold">{item.author}</div>
-                          <div className="text-indigo-400 text-sm">{item.role}</div>
-                       </div>
-                    </div>
-                 </Reveal>
-               ))}
+  <div className="container mx-auto px-6">
+
+    <Reveal className="text-center mb-16">
+      <h2 className="text-3xl font-bold mb-4">Client Stories</h2>
+    </Reveal>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      {[
+        {
+          quote: "TVL Studios transformed our vague ideas into a world-class digital product. The attention to detail is unmatched.",
+          author: "Sarah Jenkins",
+          
+        },
+        {
+          quote: "The team moves fast but never breaks things. They are the perfect partner for high-growth startups.",
+          author: "David Chen",
+         
+        },
+        {
+          quote: "We've worked with many agencies, but TVL is in a league of its own. Truly futuristic design work.",
+          author: "Elena Rodriguez",
+         
+        }
+      ].map((item, i) => (
+        <Reveal key={i} delay={i * 0.1}>
+          <div className="p-8 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-sm relative flex flex-col h-full">
+
+            {/* Icon */}
+            <MessageSquare className="absolute top-6 right-6 text-white/10 w-8 h-8" />
+
+            {/* Quote */}
+            <p className="text-gray-300 mb-6 text-lg leading-relaxed">
+              "{item.quote}"
+            </p>
+
+            {/* Spacer pushes author to bottom = perfect symmetry */}
+            <div className="flex-grow"></div>
+
+            {/* Author Block */}
+            <div className="mt-4">
+              <div className="text-white font-bold">{item.author}</div>
+              <div className="text-indigo-400 text-sm">{item.role}</div>
             </div>
-         </div>
-      </section>
+
+          </div>
+        </Reveal>
+      ))}
+
+    </div>
+  </div>
+</section>
+
 
       {/* CTA / Footer */}
       <footer className="bg-black pt-32 pb-12 border-t border-white/10 relative overflow-hidden">
@@ -564,7 +579,7 @@ export default function App() {
               <div>
                 <h2 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight">Let's build the <br/> future.</h2>
                 <p className="text-xl text-gray-400 max-w-md mb-10">
-                  Ready to elevate your brand? We are currently accepting new partnerships for Q3 2025.
+                  Ready to elevate your brand? We are currently accepting new partnerships for Q1 2026.
                 </p>
                 <button 
   onClick={() => window.location.href = "/start-project"}
@@ -616,11 +631,11 @@ export default function App() {
           </Reveal>
 
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 text-sm text-gray-600">
-            <p>&copy; 2025 TVL Studios. All rights reserved.</p>
+            <p>&copy; 2026 TVL Studios. All rights reserved.</p>
             <div className="flex gap-8 mt-6 md:mt-0">
               <a href="#" className="hover:text-gray-400 transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-gray-400 transition-colors">Terms of Service</a>
-              <a href="#" className="hover:text-gray-400 transition-colors">Sitemap</a>
+              
             </div>
           </div>
         </div>
