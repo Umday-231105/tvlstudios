@@ -33,16 +33,17 @@ const ThreeBackground = () => {
     const container = mountRef.current;
     if (!container) return;
 
+    // Scene setup
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x020312, 18, 60);
+    scene.fog = new THREE.Fog(0x020617, 25, 80);
 
     const camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
       0.1,
-      100
+      120
     );
-    camera.position.set(0, 0, 18);
+    camera.position.set(0, 0, 20);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -53,113 +54,161 @@ const ThreeBackground = () => {
     renderer.outputEncoding = THREE.sRGBEncoding;
     container.appendChild(renderer.domElement);
 
-    // Lights
-    const ambient = new THREE.AmbientLight(0x7b8cff, 0.7);
+    // Lighting – cool tech / AI mood
+    const ambient = new THREE.AmbientLight(0x4b5563, 0.7);
     scene.add(ambient);
 
-    const keyLight = new THREE.DirectionalLight(0x818cf8, 1.2);
+    const keyLight = new THREE.DirectionalLight(0x4f46e5, 1.4);
     keyLight.position.set(6, 10, 10);
     scene.add(keyLight);
 
-    const rimLight = new THREE.PointLight(0xa855f7, 1.4, 50);
-    rimLight.position.set(-8, -4, -6);
+    const rimLight = new THREE.DirectionalLight(0x22d3ee, 1.0);
+    rimLight.position.set(-8, -6, -4);
     scene.add(rimLight);
 
-    // Group to hold main objects
-    const mainGroup = new THREE.Group();
-    scene.add(mainGroup);
+    // Root group
+    const root = new THREE.Group();
+    scene.add(root);
 
-    // AI Core - TorusKnot
-    const aiGeo = new THREE.TorusKnotGeometry(3, 0.7, 220, 32);
-    const aiMat = new THREE.MeshStandardMaterial({
-      color: 0x6366f1,
-      metalness: 0.8,
-      roughness: 0.25,
-      emissive: 0x1d214f,
-      emissiveIntensity: 0.8,
+    // --- Neural Core (AI brain) ---
+    const coreGeo = new THREE.IcosahedronGeometry(3, 3);
+    const coreMat = new THREE.MeshStandardMaterial({
+      color: 0x4f46e5,
+      metalness: 0.9,
+      roughness: 0.2,
+      emissive: 0x1d1b4b,
+      emissiveIntensity: 1.0,
     });
-    const aiMesh = new THREE.Mesh(aiGeo, aiMat);
-    aiMesh.position.set(-2, 1, 0);
-    mainGroup.add(aiMesh);
+    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    root.add(coreMesh);
 
-    // Web Dev - Layered Cubes
-    const webGroup = new THREE.Group();
-    const webMat = new THREE.MeshStandardMaterial({
-      color: 0x22c55e,
-      metalness: 0.6,
-      roughness: 0.35,
-      emissive: 0x052e16,
-      emissiveIntensity: 0.5,
+    // Wireframe overlay (neural mesh)
+    const coreWireMat = new THREE.MeshBasicMaterial({
+      color: 0x818cf8,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.4,
     });
-    const boxGeo = new THREE.BoxGeometry(1.4, 1, 0.3);
-    for (let i = 0; i < 5; i++) {
-      const cube = new THREE.Mesh(boxGeo, webMat);
-      cube.position.set(
-        3 + i * 0.2,
-        -1.2 + i * 0.35,
-        -1 - i * 0.3
-      );
-      cube.scale.set(1, 1 + i * 0.08, 1);
-      webGroup.add(cube);
-    }
-    mainGroup.add(webGroup);
+    const coreWire = new THREE.Mesh(coreGeo, coreWireMat);
+    root.add(coreWire);
 
-    // Graphics - Floating Icosahedrons
-    const graphicMat = new THREE.MeshStandardMaterial({
-      color: 0xf97316,
-      metalness: 0.7,
-      roughness: 0.3,
-      emissive: 0x451a03,
-      emissiveIntensity: 0.7,
-      wireframe: false,
+    // --- Data Rings (orbits) ---
+    const ringsGroup = new THREE.Group();
+    root.add(ringsGroup);
+
+    const ringConfigs = [
+      { radius: 5.2, speed: 0.12, tilt: 0.3 },
+      { radius: 6.4, speed: -0.08, tilt: -0.2 },
+      { radius: 7.4, speed: 0.18, tilt: 0.6 },
+    ];
+
+    ringConfigs.forEach((cfg, idx) => {
+      const ringGeo = new THREE.TorusGeometry(cfg.radius, 0.06, 16, 220);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: idx === 1 ? 0x22d3ee : 0xa855f7,
+        transparent: true,
+        opacity: 0.7,
+      });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = cfg.tilt;
+      ringsGroup.add(ring);
+      ring.userData = { speed: cfg.speed };
     });
 
-    const graphicsGroup = new THREE.Group();
-    for (let i = 0; i < 6; i++) {
-      const geo = new THREE.IcosahedronGeometry(0.7, 0);
-      const mesh = new THREE.Mesh(geo, graphicMat);
-      const radius = 7 + Math.random() * 3;
-      const angle = (i / 6) * Math.PI * 2;
-      mesh.position.set(
-        Math.cos(angle) * radius,
-        Math.sin(angle) * 1.8,
-        -4 - Math.random() * 4
-      );
-      mesh.userData = {
+    // --- Circuit grid planes ---
+    const gridHelper1 = new THREE.GridHelper(60, 40, 0x1f2937, 0x111827);
+    gridHelper1.position.y = -8;
+    gridHelper1.position.z = -10;
+    gridHelper1.rotation.x = -Math.PI / 2;
+    scene.add(gridHelper1);
+
+    const gridHelper2 = new THREE.GridHelper(40, 30, 0x1f2937, 0x111827);
+    gridHelper2.position.y = 10;
+    gridHelper2.position.z = -20;
+    gridHelper2.rotation.x = Math.PI / 2.5;
+    scene.add(gridHelper2);
+
+    // --- Connection Nodes & Links (network graph) ---
+    const nodesGroup = new THREE.Group();
+    root.add(nodesGroup);
+
+    const nodeGeo = new THREE.SphereGeometry(0.16, 16, 16);
+    const nodeMat = new THREE.MeshBasicMaterial({
+      color: 0x22d3ee,
+      transparent: true,
+      opacity: 0.9,
+    });
+
+    const linkGeo = new THREE.BufferGeometry();
+    const linkPositions = [];
+    const nodes = [];
+
+    for (let i = 0; i < 26; i++) {
+      const r = 6 + Math.random() * 3;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.random() * Math.PI;
+
+      const x = r * Math.sin(phi) * Math.cos(theta);
+      const y = r * Math.cos(phi) * 0.7;
+      const z = r * Math.sin(phi) * Math.sin(theta);
+
+      const node = new THREE.Mesh(nodeGeo, nodeMat);
+      node.position.set(x, y, z);
+      node.userData = {
+        baseY: y,
         floatOffset: Math.random() * Math.PI * 2,
-        floatSpeed: 0.6 + Math.random() * 0.4,
       };
-      graphicsGroup.add(mesh);
+      nodesGroup.add(node);
+      nodes.push(node);
     }
-    mainGroup.add(graphicsGroup);
 
-    // Particle field (digital dust)
+    // simple links between node pairs
+    for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i].position;
+      const b = nodes[(i + 3) % nodes.length].position;
+      linkPositions.push(a.x, a.y, a.z, b.x, b.y, b.z);
+    }
+
+    const linkPosArray = new Float32Array(linkPositions);
+    linkGeo.setAttribute(
+      "position",
+      new THREE.BufferAttribute(linkPosArray, 3)
+    );
+    const linkMat = new THREE.LineBasicMaterial({
+      color: 0x22d3ee,
+      transparent: true,
+      opacity: 0.35,
+    });
+    const links = new THREE.LineSegments(linkGeo, linkMat);
+    nodesGroup.add(links);
+
+    // --- Particle field ("data dust") ---
     const particlesGeo = new THREE.BufferGeometry();
-    const particleCount = 700;
+    const particleCount = 900;
     const posArray = new Float32Array(particleCount * 3);
     const colorArray = new Float32Array(particleCount * 3);
 
     for (let i = 0; i < particleCount * 3; i += 3) {
-      const x = (Math.random() - 0.5) * 50;
-      const y = (Math.random() - 0.5) * 30;
-      const z = -Math.random() * 60;
+      const x = (Math.random() - 0.5) * 60;
+      const y = (Math.random() - 0.5) * 34;
+      const z = -Math.random() * 80;
 
       posArray[i] = x;
       posArray[i + 1] = y;
       posArray[i + 2] = z;
 
       const tint = 0.6 + Math.random() * 0.4;
-      colorArray[i] = 0.55 * tint;
-      colorArray[i + 1] = 0.62 * tint;
-      colorArray[i + 2] = 0.98 * tint;
+      colorArray[i] = 0.4 * tint;
+      colorArray[i + 1] = 0.8 * tint;
+      colorArray[i + 2] = 1.0 * tint;
     }
 
     particlesGeo.setAttribute(
-      'position',
+      "position",
       new THREE.BufferAttribute(posArray, 3)
     );
     particlesGeo.setAttribute(
-      'color',
+      "color",
       new THREE.BufferAttribute(colorArray, 3)
     );
 
@@ -167,7 +216,7 @@ const ThreeBackground = () => {
       size: 0.06,
       vertexColors: true,
       transparent: true,
-      opacity: 0.65,
+      opacity: 0.7,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
@@ -184,7 +233,7 @@ const ThreeBackground = () => {
       mouseY = (e.clientY / window.innerHeight) * 2 - 1;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
 
     // Resize handler
     const handleResize = () => {
@@ -195,7 +244,7 @@ const ThreeBackground = () => {
       renderer.setSize(width, height);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Animation loop
     let frameId;
@@ -205,33 +254,35 @@ const ThreeBackground = () => {
       frameId = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      // Slow rotation for main group
-      mainGroup.rotation.y = t * 0.06;
-      mainGroup.rotation.x = Math.sin(t * 0.15) * 0.12;
+      // Rotate whole system
+      root.rotation.y = t * 0.06;
+      root.rotation.x = Math.sin(t * 0.1) * 0.08;
 
-      // Extra motion for AI core
-      aiMesh.rotation.x += 0.004;
-      aiMesh.rotation.y += 0.007;
+      coreMesh.rotation.y += 0.004;
+      coreMesh.rotation.x += 0.002;
+      coreWire.rotation.y -= 0.002;
 
-      // WebDev group subtle motion
-      webGroup.rotation.y = Math.sin(t * 0.4) * 0.2;
+      // Rings
+      ringsGroup.children.forEach((ring) => {
+        const speed = ring.userData.speed || 0.1;
+        ring.rotation.z += speed * 0.01;
+      });
 
-      // Graphics floating
-      graphicsGroup.children.forEach((mesh) => {
-        const { floatOffset, floatSpeed } = mesh.userData;
-        mesh.position.y += Math.sin(t * floatSpeed + floatOffset) * 0.004;
-        mesh.rotation.y += 0.01;
+      // Node floating
+      nodes.forEach((node) => {
+        const { baseY, floatOffset } = node.userData;
+        node.position.y = baseY + Math.sin(t * 1.1 + floatOffset) * 0.25;
       });
 
       // Camera parallax
-      const targetX = mouseX * 2.2;
-      const targetY = mouseY * 1.4;
+      const targetX = mouseX * 2.4;
+      const targetY = mouseY * 1.6;
 
       camera.position.x += (targetX - camera.position.x) * 0.04;
       camera.position.y += (targetY - camera.position.y) * 0.04;
       camera.lookAt(0, 0, 0);
 
-      // Slow drift of particles
+      // Particle drift
       particles.rotation.z = t * 0.02;
 
       renderer.render(scene, camera);
@@ -242,18 +293,20 @@ const ThreeBackground = () => {
     // Cleanup
     return () => {
       cancelAnimationFrame(frameId);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", handleResize);
 
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
 
-      // Dispose geometries & materials
-      aiGeo.dispose();
-      aiMat.dispose();
-      boxGeo.dispose();
-      graphicMat.dispose();
+      coreGeo.dispose();
+      coreMat.dispose();
+      coreWireMat.dispose();
+      nodeGeo.dispose();
+      nodeMat.dispose();
+      linkGeo.dispose();
+      linkMat.dispose();
       particlesGeo.dispose();
       particlesMat.dispose();
 
@@ -262,95 +315,7 @@ const ThreeBackground = () => {
   }, []);
 
   return (
-    <div
-      ref={mountRef}
-      className="fixed inset-0 z-0 pointer-events-none"
-    />
-  );
-};
-
-// 1. Slow Animated Background (Starfield/Particles)
-const Starfield = () => {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    let animationFrameId;
-    
-    canvas.width = width;
-    canvas.height = height;
-
-    const particles = [];
-    const particleCount = 80; 
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        size: Math.random() * 1.2 + 0.4,
-        speedX: (Math.random() - 0.5) * 0.4,
-        speedY: (Math.random() - 0.5) * 0.4,
-        opacity: Math.random() * 0.5 + 0.3
-      });
-    }
-
-    const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-
-      particles.forEach((particle, index) => {
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-
-        if (particle.x < 0) particle.x = width;
-        if (particle.x > width) particle.x = 0;
-        if (particle.y < 0) particle.y = height;
-        if (particle.y > height) particle.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(148, 163, 255, ${particle.opacity})`;
-        ctx.fill();
-      });
-
-      // Subtle nebula overlay
-      const gradient = ctx.createRadialGradient(
-        width * 0.3, height * 0.3, 0,
-        width * 0.3, height * 0.3, width * 0.8
-      );
-      gradient.addColorStop(0, 'rgba(79, 70, 229, 0.12)');
-      gradient.addColorStop(1, 'rgba(15, 23, 42, 0)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, width, height);
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    const handleResize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  return (
-    <canvas 
-      ref={canvasRef} 
-      className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none"
-      style={{ background: 'radial-gradient(circle at center, #020617 0%, #020617 40%, #020617 100%)' }}
-    />
+    <div ref={mountRef} className="fixed inset-0 z-0 pointer-events-none" />
   );
 };
 
