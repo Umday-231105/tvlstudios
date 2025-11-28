@@ -3,6 +3,66 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Mail, User, Building2, PenTool, ArrowRight } from "lucide-react";
 
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${isScrolled ? 'bg-black/60 backdrop-blur-xl border-b border-white/5 py-4' : 'bg-transparent py-8'}`}>
+      <div className="container mx-auto px-6 flex justify-between items-center">
+        <div className="flex items-center gap-3 cursor-pointer group">
+          <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 transition-all duration-500">
+            <span className="text-white font-bold text-xl">T</span>
+          </div>
+          <span className="text-xl font-bold tracking-tight text-white group-hover:text-indigo-300 transition-colors duration-500">TVL STUDIOS</span>
+        </div>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-8">
+          {['About', 'Services', 'Process', 'Work'].map((item) => (
+            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-medium text-gray-400 hover:text-white transition-colors duration-300">
+              {item}
+            </a>
+          ))}
+          <button 
+  onClick={() => window.location.href = "/start-project"}
+  className="px-6 py-2.5 bg-white text-black rounded-full text-sm font-bold hover:bg-indigo-50 transition-all duration-300 hover:scale-105 active:scale-95"
+
+>
+  Start Project
+</button>
+        </div>
+
+        {/* Mobile Toggle */}
+        <button className="md:hidden text-white p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          {mobileMenuOpen ? <X /> : <Menu />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute top-full left-0 w-full bg-black/95 border-b border-white/10 p-6 flex flex-col gap-6 md:hidden backdrop-blur-xl"
+        >
+           {['Work', 'Services', 'Process', 'About'].map((item) => (
+            <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMobileMenuOpen(false)} className="text-xl text-gray-300 hover:text-white">
+              {item}
+            </a>
+          ))}
+        </motion.div>
+      )}
+    </nav>
+  );
+};
+
 const Page = () => {
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
