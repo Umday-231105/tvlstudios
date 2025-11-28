@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import * as THREE from 'three';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { 
   Play, 
@@ -24,6 +25,250 @@ const SMOOTH_TRANSITION = { duration: 1.0, ease: [0.25, 0.1, 0.25, 1] }; // "Lux
 
 // --- Components ---
 
+// 1. Interactive 3D Background (Three.js)
+const ThreeBackground = () => {
+  const mountRef = useRef(null);
+
+  useEffect(() => {
+    const container = mountRef.current;
+    if (!container) return;
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x020312, 18, 60);
+
+    const camera = new THREE.PerspectiveCamera(
+      45,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      100
+    );
+    camera.position.set(0, 0, 18);
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    container.appendChild(renderer.domElement);
+
+    // Lights
+    const ambient = new THREE.AmbientLight(0x7b8cff, 0.7);
+    scene.add(ambient);
+
+    const keyLight = new THREE.DirectionalLight(0x818cf8, 1.2);
+    keyLight.position.set(6, 10, 10);
+    scene.add(keyLight);
+
+    const rimLight = new THREE.PointLight(0xa855f7, 1.4, 50);
+    rimLight.position.set(-8, -4, -6);
+    scene.add(rimLight);
+
+    // Group to hold main objects
+    const mainGroup = new THREE.Group();
+    scene.add(mainGroup);
+
+    // AI Core - TorusKnot
+    const aiGeo = new THREE.TorusKnotGeometry(3, 0.7, 220, 32);
+    const aiMat = new THREE.MeshStandardMaterial({
+      color: 0x6366f1,
+      metalness: 0.8,
+      roughness: 0.25,
+      emissive: 0x1d214f,
+      emissiveIntensity: 0.8,
+    });
+    const aiMesh = new THREE.Mesh(aiGeo, aiMat);
+    aiMesh.position.set(-2, 1, 0);
+    mainGroup.add(aiMesh);
+
+    // Web Dev - Layered Cubes
+    const webGroup = new THREE.Group();
+    const webMat = new THREE.MeshStandardMaterial({
+      color: 0x22c55e,
+      metalness: 0.6,
+      roughness: 0.35,
+      emissive: 0x052e16,
+      emissiveIntensity: 0.5,
+    });
+    const boxGeo = new THREE.BoxGeometry(1.4, 1, 0.3);
+    for (let i = 0; i < 5; i++) {
+      const cube = new THREE.Mesh(boxGeo, webMat);
+      cube.position.set(
+        3 + i * 0.2,
+        -1.2 + i * 0.35,
+        -1 - i * 0.3
+      );
+      cube.scale.set(1, 1 + i * 0.08, 1);
+      webGroup.add(cube);
+    }
+    mainGroup.add(webGroup);
+
+    // Graphics - Floating Icosahedrons
+    const graphicMat = new THREE.MeshStandardMaterial({
+      color: 0xf97316,
+      metalness: 0.7,
+      roughness: 0.3,
+      emissive: 0x451a03,
+      emissiveIntensity: 0.7,
+      wireframe: false,
+    });
+
+    const graphicsGroup = new THREE.Group();
+    for (let i = 0; i < 6; i++) {
+      const geo = new THREE.IcosahedronGeometry(0.7, 0);
+      const mesh = new THREE.Mesh(geo, graphicMat);
+      const radius = 7 + Math.random() * 3;
+      const angle = (i / 6) * Math.PI * 2;
+      mesh.position.set(
+        Math.cos(angle) * radius,
+        Math.sin(angle) * 1.8,
+        -4 - Math.random() * 4
+      );
+      mesh.userData = {
+        floatOffset: Math.random() * Math.PI * 2,
+        floatSpeed: 0.6 + Math.random() * 0.4,
+      };
+      graphicsGroup.add(mesh);
+    }
+    mainGroup.add(graphicsGroup);
+
+    // Particle field (digital dust)
+    const particlesGeo = new THREE.BufferGeometry();
+    const particleCount = 700;
+    const posArray = new Float32Array(particleCount * 3);
+    const colorArray = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      const x = (Math.random() - 0.5) * 50;
+      const y = (Math.random() - 0.5) * 30;
+      const z = -Math.random() * 60;
+
+      posArray[i] = x;
+      posArray[i + 1] = y;
+      posArray[i + 2] = z;
+
+      const tint = 0.6 + Math.random() * 0.4;
+      colorArray[i] = 0.55 * tint;
+      colorArray[i + 1] = 0.62 * tint;
+      colorArray[i + 2] = 0.98 * tint;
+    }
+
+    particlesGeo.setAttribute(
+      'position',
+      new THREE.BufferAttribute(posArray, 3)
+    );
+    particlesGeo.setAttribute(
+      'color',
+      new THREE.BufferAttribute(colorArray, 3)
+    );
+
+    const particlesMat = new THREE.PointsMaterial({
+      size: 0.06,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.65,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+
+    const particles = new THREE.Points(particlesGeo, particlesMat);
+    scene.add(particles);
+
+    // Mouse interaction
+    let mouseX = 0;
+    let mouseY = 0;
+
+    const handleMouseMove = (e) => {
+      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    // Resize handler
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Animation loop
+    let frameId;
+    const clock = new THREE.Clock();
+
+    const animate = () => {
+      frameId = requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+
+      // Slow rotation for main group
+      mainGroup.rotation.y = t * 0.06;
+      mainGroup.rotation.x = Math.sin(t * 0.15) * 0.12;
+
+      // Extra motion for AI core
+      aiMesh.rotation.x += 0.004;
+      aiMesh.rotation.y += 0.007;
+
+      // WebDev group subtle motion
+      webGroup.rotation.y = Math.sin(t * 0.4) * 0.2;
+
+      // Graphics floating
+      graphicsGroup.children.forEach((mesh) => {
+        const { floatOffset, floatSpeed } = mesh.userData;
+        mesh.position.y += Math.sin(t * floatSpeed + floatOffset) * 0.004;
+        mesh.rotation.y += 0.01;
+      });
+
+      // Camera parallax
+      const targetX = mouseX * 2.2;
+      const targetY = mouseY * 1.4;
+
+      camera.position.x += (targetX - camera.position.x) * 0.04;
+      camera.position.y += (targetY - camera.position.y) * 0.04;
+      camera.lookAt(0, 0, 0);
+
+      // Slow drift of particles
+      particles.rotation.z = t * 0.02;
+
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    // Cleanup
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', handleResize);
+
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
+
+      // Dispose geometries & materials
+      aiGeo.dispose();
+      aiMat.dispose();
+      boxGeo.dispose();
+      graphicMat.dispose();
+      particlesGeo.dispose();
+      particlesMat.dispose();
+
+      renderer.dispose();
+    };
+  }, []);
+
+  return (
+    <div
+      ref={mountRef}
+      className="fixed inset-0 z-0 pointer-events-none"
+    />
+  );
+};
+
 // 1. Slow Animated Background (Starfield/Particles)
 const Starfield = () => {
   const canvasRef = useRef(null);
@@ -45,37 +290,40 @@ const Starfield = () => {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.05, 
-        vy: (Math.random() - 0.5) * 0.05, 
-        size: Math.random() * 1.5,
-        opacity: Math.random() * 0.4 + 0.1
+        size: Math.random() * 1.2 + 0.4,
+        speedX: (Math.random() - 0.5) * 0.4,
+        speedY: (Math.random() - 0.5) * 0.4,
+        opacity: Math.random() * 0.5 + 0.3
       });
     }
 
     const animate = () => {
       ctx.clearRect(0, 0, width, height);
-      
-      // Deep space gradient
-      const gradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, width);
-      gradient.addColorStop(0, 'rgba(15, 15, 20, 0)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.4)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, width, height);
 
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
+      particles.forEach((particle, index) => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
 
-        if (p.x < 0) p.x = width;
-        if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height;
-        if (p.y > height) p.y = 0;
+        if (particle.x < 0) particle.x = width;
+        if (particle.x > width) particle.x = 0;
+        if (particle.y < 0) particle.y = height;
+        if (particle.y > height) particle.y = 0;
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(160, 180, 255, ${p.opacity})`;
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(148, 163, 255, ${particle.opacity})`;
         ctx.fill();
       });
+
+      // Subtle nebula overlay
+      const gradient = ctx.createRadialGradient(
+        width * 0.3, height * 0.3, 0,
+        width * 0.3, height * 0.3, width * 0.8
+      );
+      gradient.addColorStop(0, 'rgba(79, 70, 229, 0.12)');
+      gradient.addColorStop(1, 'rgba(15, 23, 42, 0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
 
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -90,9 +338,10 @@ const Starfield = () => {
     };
 
     window.addEventListener('resize', handleResize);
+
     return () => {
-      window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -100,7 +349,7 @@ const Starfield = () => {
     <canvas 
       ref={canvasRef} 
       className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none"
-      style={{ background: 'radial-gradient(circle at center, #0a0a0f 0%, #000000 100%)' }}
+      style={{ background: 'radial-gradient(circle at center, #020617 0%, #020617 40%, #020617 100%)' }}
     />
   );
 };
@@ -123,7 +372,7 @@ const BackgroundOrbs = () => {
       // Random delay
       delay: Math.random() * 2,
       // Random max opacity for "some glow more, some less"
-      maxOpacity: Math.random() * 0.4 + 0.2 
+      maxOpacity: Math.random() * 0.3 + 0.2,
     }));
   }, []);
 
@@ -140,16 +389,14 @@ const BackgroundOrbs = () => {
           }}
           className={`absolute rounded-full blur-[100px] ${orb.color}`}
           animate={{ 
-            scale: [1, 1.2, 1], 
-            opacity: [orb.maxOpacity * 0.5, orb.maxOpacity, orb.maxOpacity * 0.5],
-            x: [0, 30, 0], // Slight drift
-            y: [0, -30, 0] 
+            opacity: [0, orb.maxOpacity, 0.05], 
+            scale: [1, 1.08, 1],
           }}
           transition={{ 
             duration: orb.duration, 
             repeat: Infinity, 
             ease: "easeInOut",
-            delay: orb.delay
+            delay: orb.delay,
           }}
         />
       ))}
@@ -169,10 +416,15 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${isScrolled ? 'bg-black/60 backdrop-blur-xl border-b border-white/5 py-4' : 'bg-transparent py-8'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled 
+        ? 'bg-black/80 backdrop-blur-xl border-b border-white/5 py-4' 
+        : 'bg-transparent py-8'
+    }`}>
       <div className="container mx-auto px-6 flex justify-between items-center">
+        {/* Logo */}
         <div className="flex items-center gap-3 cursor-pointer group">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 transition-all duration-500">
+          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:shadow-indigo-500/40 transition-all duration-500">
             <span className="text-white font-bold text-xl">T</span>
           </div>
           <span className="text-xl font-bold tracking-tight text-white group-hover:text-indigo-300 transition-colors duration-500">TVL STUDIOS</span>
@@ -181,89 +433,127 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8">
           {['About', 'Services', 'Process', 'Work'].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-medium text-gray-400 hover:text-white transition-colors duration-300">
+            <a 
+              key={item} 
+              href={`#${item.toLowerCase()}`} 
+              className="text-sm text-gray-400 hover:text-white transition-colors duration-300"
+            >
               {item}
             </a>
           ))}
           <button 
-  onClick={() => window.location.href = "/start-project"}
-  className="px-6 py-2.5 bg-white text-black rounded-full text-sm font-bold hover:bg-indigo-50 transition-all duration-300 hover:scale-105 active:scale-95"
-
->
-  Start Project
-</button>
+            onClick={() => window.location.href = "/start-project"}
+            className="px-6 py-2.5 bg-white text-black rounded-full text-sm font-semibold tracking-wide hover:bg-gray-100 hover:-translate-y-0.5 transition-all duration-300 shadow-lg shadow-indigo-500/20"
+          >
+            Start a Project
+          </button>
         </div>
 
-        {/* Mobile Toggle */}
-        <button className="md:hidden text-white p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          {mobileMenuOpen ? <X /> : <Menu />}
+        {/* Mobile Menu Button */}
+        <button 
+          className="md:hidden p-2 rounded-full border border-white/10 bg-white/5" 
+          onClick={() => setMobileMenuOpen(prev => !prev)}
+        >
+          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute top-full left-0 w-full bg-black/95 border-b border-white/10 p-6 flex flex-col gap-6 md:hidden backdrop-blur-xl"
-        >
-           {['Work', 'Services', 'Process', 'About'].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMobileMenuOpen(false)} className="text-xl text-gray-300 hover:text-white">
-              {item}
-            </a>
-          ))}
-        </motion.div>
+        <div className="md:hidden mt-3 px-6 pb-4">
+          <div className="bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex flex-col gap-3">
+            {['About', 'Services', 'Process', 'Work'].map((item) => (
+              <a 
+                key={item} 
+                href={`#${item.toLowerCase()}`} 
+                className="text-sm text-gray-300 hover:text-white transition-colors duration-200"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item}
+              </a>
+            ))}
+            <button 
+              onClick={() => {
+                window.location.href = "/start-project";
+                setMobileMenuOpen(false);
+              }}
+              className="mt-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-sm text-white hover:bg-white/10 transition-all duration-200"
+            >
+              Start a Project
+            </button>
+          </div>
+        </div>
       )}
     </nav>
   );
 };
 
-// 4. Reusable Animation Wrapper
-const Reveal = ({ children, delay = 0, className = "" }) => (
+// 4. Reveal Wrapper for smooth scroll-in animations
+const Reveal = ({ children, delay = 0 }) => (
   <motion.div
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
-    // Adjusted viewport settings to fix disappearing issue. 
-    // Removing negative margin and setting amount to 0.2 ensures it stays visible once triggered.
-    viewport={{ once: true, amount: 0.2 }} 
-    transition={{ ...SMOOTH_TRANSITION, delay }}
-    className={className}
+    viewport={{ once: true, amount: 0.2 }}
+    transition={{ duration: 0.8, delay, ease: [0.33, 1, 0.68, 1] }}
   >
     {children}
   </motion.div>
 );
 
-// 5. Process Step Component
-const ProcessStep = ({ number, title, desc }) => (
-  <div className="relative pl-10 md:pl-0">
-    <div className="md:hidden absolute left-0 top-0 bottom-0 w-px bg-white/10">
-       <div className="absolute top-0 left-[-4px] w-2 h-2 rounded-full bg-indigo-500"></div>
-    </div>
-    <div className="mb-4 text-5xl font-bold text-white/30">{number}</div>
-    <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
-    <p className="text-gray-400 leading-relaxed">{desc}</p>
-  </div>
-);
+// 5. Hook for parallax scroll effects (hero + cards)
+const useParallax = () => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
 
-// 6. Feature Card 
-const FeatureCard = ({ icon: Icon, title, desc, delay }) => (
-  <Reveal delay={delay} className="h-full">
-    <div className="h-full p-8 rounded-3xl bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-indigo-500/30 transition-all duration-500 group cursor-default">
-      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-900 to-black border border-white/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-indigo-500/20 transition-all duration-500">
-        <Icon className="w-7 h-7 text-indigo-400 group-hover:text-white transition-colors duration-300" />
+  const y = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.4]);
+
+  return { ref, y, opacity };
+};
+
+// 6. Service Card Component
+const ServiceCard = ({ Icon, title, desc, badge }) => {
+  return (
+    <Reveal>
+      <div className="group relative bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 overflow-hidden hover:border-indigo-400/60 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_24px_70px_rgba(79,70,229,0.35)]">
+        {/* Glow behind */}
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-11 h-11 rounded-2xl bg-indigo-500/15 border border-indigo-400/40 flex items-center justify-center group-hover:bg-indigo-500/30 transition-all duration-300">
+              <Icon className="w-5 h-5 text-indigo-300 group-hover:text-white transition-colors duration-300" />
+            </div>
+            {badge && (
+              <span className="text-[11px] uppercase tracking-[0.2em] text-indigo-300 bg-indigo-500/10 border border-indigo-500/40 rounded-full px-3 py-1">
+                {badge}
+              </span>
+            )}
+          </div>
+
+          <h3 className="text-lg md:text-xl font-semibold text-white mb-3">
+            {title}
+          </h3>
+          <p className="text-sm md:text-[15px] text-gray-400 leading-relaxed">
+            {desc}
+          </p>
+        </div>
+
+        {/* Accent line */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-400/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
-      <h3 className="text-xl font-bold text-white mb-4 group-hover:text-indigo-300 transition-colors">{title}</h3>
-      <p className="text-gray-400 leading-relaxed">{desc}</p>
-    </div>
-  </Reveal>
-);
+    </Reveal>
+  );
+};
 
 // 7. Main App Layout
 export default function App() {
   return (
     <div className="min-h-screen text-white selection:bg-indigo-500/30 font-sans overflow-x-hidden">
-      <Starfield />
-      <BackgroundOrbs /> {/* Added new Orbs component */}
+      <ThreeBackground />
       <Navbar />
 
       {/* Hero Section */}
@@ -278,364 +568,403 @@ export default function App() {
               <span className="text-sm text-gray-300 font-medium tracking-wide">Accepting New Clients for 2026</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold tracking-tighter mb-8 leading-tight">
-              <span className="block bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">We Craft Digital</span>
-              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 animate-gradient-x">Experiences.</span>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
+              <span className="block mb-2">Designing the</span>
+              <span className="block bg-clip-text text-transparent bg-gradient-to-br from-white via-indigo-200 to-indigo-400">
+                next digital era.
+              </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
-              TVL Studios is a next-generation creative agency. We blend high-fidelity design with cutting-edge technology to build brands that define the future.
+            <p className="max-w-2xl mx-auto text-gray-300 text-sm md:text-base leading-relaxed mb-8">
+              TVL Studios blends{" "}
+              <span className="text-indigo-300 font-medium">AI</span>,{" "}
+              <span className="text-indigo-300 font-medium">cinematic visuals</span>, and{" "}
+              <span className="text-indigo-300 font-medium">purpose-built web experiences</span>{" "}
+              to help future-focused brands stand out in a noisy world.
             </p>
 
-            <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
+            <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-10">
               <button
-  onClick={() => {
-    document.getElementById("work").scrollIntoView({
-      behavior: "smooth",
-    });
-  }}
-  className="px-10 py-4 bg-white text-black rounded-full font-bold text-lg hover:bg-indigo-50 transition-all duration-300 flex items-center gap-2 group hover:scale-105 active:scale-95"
->
-  View Our Work
-  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-</button>
+                onClick={() => window.location.href = "/start-project"}
+                className="px-7 py-3 md:px-8 md:py-3.5 rounded-full bg-white text-black font-medium text-sm md:text-[15px] flex items-center gap-2 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5 transition-all duration-200"
+              >
+                Start a Project
+                <ArrowRight className="w-4 h-4" />
+              </button>
 
-              <button className="px-10 py-4 bg-white/5 text-white border border-white/10 rounded-full font-bold text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-md hover:scale-105 active:scale-95">
-                Contact Us
+              <button
+                onClick={() => {
+                  const el = document.getElementById('work');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }}
+                className="px-7 py-3 md:px-8 md:py-3.5 rounded-full border border-white/20 bg-black/30 text-sm md:text-[15px] text-gray-100 flex items-center gap-2 hover:bg-white/10 hover:border-white/40 transition-all duration-200"
+              >
+                View Our Work
+                <Play className="w-4 h-4" />
               </button>
             </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs md:text-[13px] text-gray-400">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>AI-first creative studio</span>
+              </div>
+              <span className="h-4 w-px bg-white/15 hidden md:inline-block" />
+              <div className="flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-indigo-300" />
+                <span>Neural-powered motion, web & branding</span>
+              </div>
+            </div>
           </Reveal>
         </div>
       </section>
 
-      {/* Trusted By Section (Logos) */}
-      <section className="py-16 border-y border-white/5 bg-black/30 backdrop-blur-sm">
-        <div className="container mx-auto px-6">
-          <p className="text-center text-xs font-bold text-gray-600 mb-10 uppercase tracking-[0.2em]">Trusted by innovators</p>
-          <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-60">
-             {['Open Word War', 'Jibhi Homestead Cabins'].map((name, i) => (
-               <div key={i} className="flex items-center gap-2 group cursor-default hover:opacity-100 transition-opacity duration-500">
-                  <div className="w-6 h-6 rounded bg-white/20 group-hover:bg-indigo-500 transition-colors duration-500"></div>
-                  <span className="text-lg font-bold text-white/80 font-mono">{name}</span>
-               </div>
-             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Services Grid */}
-      <section id="services" className="py-32 relative">
+      {/* About / Studio Section */}
+      <section id="about" className="relative py-20 md:py-24">
         <div className="container mx-auto px-6 relative z-10">
-          <Reveal className="text-center mb-24">
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">Capabilities</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-              We don't just build websites. We build ecosystems that scale with your vision.
-            </p>
-          </Reveal>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <Reveal>
+              <div>
+                <p className="text-xs font-semibold tracking-[0.2em] text-indigo-300 mb-3 uppercase">
+                  STUDIO
+                </p>
+                <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
+                  A small, focused team crafting{" "}
+                  <span className="text-indigo-300">future-ready experiences.</span>
+                </h2>
+                <p className="text-sm md:text-[15px] text-gray-300 leading-relaxed mb-4">
+                  TVL Studios was built on one idea:{" "}
+                  <span className="text-white font-medium">
+                    every interaction should feel designed
+                  </span>{" "}
+                  — from the first pixel to the last scroll.
+                </p>
+                <p className="text-sm md:text-[15px] text-gray-400 leading-relaxed">
+                  We combine AI workflows, cinematic visuals, and engineering-grade web builds
+                  to help brands move faster, launch sharper, and look unforgettable.
+                </p>
+              </div>
+            </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <FeatureCard 
-              icon={MonitorPlay}
-              title="Web Design & WebGL"
-              desc="Immersive 3D web experiences that capture attention and drive engagement using Three.js and React."
-              delay={0.1}
-            />
-            <FeatureCard 
-              icon={Cpu}
-              title="AI Integration"
-              desc="Smart automation and AI-driven interfaces that make your digital product feel alive and responsive."
-              delay={0.2}
-            />
-            <FeatureCard 
-              icon={Aperture}
-              title="Brand Identity"
-              desc="Future-proof visual systems including motion graphics, typography, and comprehensive design languages."
-              delay={0.3}
-            />
-             <FeatureCard 
-              icon={Globe}
-              title="Global Scaling"
-              desc="Infrastructure designed to handle millions of users with edge-computing and global CDNs."
-              delay={0.4}
-            />
-             <FeatureCard 
-              icon={Zap}
-              title="Performance Optimization"
-              desc="Lightning fast load times and SEO-perfected structures to ensure you rank #1."
-              delay={0.5}
-            />
-             <FeatureCard 
-              icon={Play}
-              title="Motion & Video"
-              desc="High-end video production and motion graphics to tell your story with cinematic quality."
-              delay={0.6}
-            />
+            <Reveal delay={0.1}>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                  <p className="text-xs text-gray-400 mb-1">Capabilities</p>
+                  <p className="text-sm text-white font-medium">
+                    AI brand systems, web design, full-stack builds, content systems.
+                  </p>
+                </div>
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                  <p className="text-xs text-gray-400 mb-1">For teams who</p>
+                  <p className="text-sm text-white font-medium">
+                    Want to move like a startup, look like a film studio, and scale like a product team.
+                  </p>
+                </div>
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                  <p className="text-xs text-gray-400 mb-1">Based in</p>
+                  <p className="text-sm text-white font-medium">
+                    Built remote-first, working with clients across time zones.
+                  </p>
+                </div>
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                  <p className="text-xs text-gray-400 mb-1">Approach</p>
+                  <p className="text-sm text-white font-medium">
+                    Strategy → Systems → Launch → Iterate. No fluff, just momentum.
+                  </p>
+                </div>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* Our Process Section */}
-      <section id="process" className="py-32 bg-black/40 border-y border-white/5 relative z-10">
-         <div className="container mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-               <Reveal>
-                  <h2 className="text-4xl md:text-5xl font-bold mb-6">How We Work</h2>
-                  <p className="text-gray-400 text-lg mb-8">
-                    Our methodology is built on transparency and velocity. We move from concept to code in record time without sacrificing quality.
-                  </p>
-                  
-               </Reveal>
-
-               <div className="space-y-12">
-                  <Reveal delay={0.2}>
-                    <ProcessStep number="01" title="Discovery & Strategy" desc="We dive deep into your business goals, analyzing market gaps and user needs to build a rock-solid foundation." />
-                  </Reveal>
-                  <Reveal delay={0.3}>
-                    <ProcessStep number="02" title="Design & Prototyping" desc="We craft high-fidelity visuals and interactive prototypes, ensuring the look and feel aligns perfectly with your brand voice." />
-                  </Reveal>
-                  <Reveal delay={0.4}>
-                    <ProcessStep number="03" title="Development & Scale" desc="We write clean, performant code using the modern stack (Next.js, React) and deploy on edge networks for global speed." />
-                  </Reveal>
-               </div>
-            </div>
-         </div>
-      </section>
-
-      {/* Featured Work (Parallax & Enhanced Visuals) */}
-      <section id="work" className="py-32 relative overflow-hidden">
-         {/* Subtle grid background */}
-         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none"></div>
-         
-         <div className="container mx-auto px-6 relative z-10">
-            <div className="flex justify-between items-end mb-20">
-              <Reveal>
-                <h2 className="text-4xl md:text-5xl font-bold mb-2">Selected Works</h2>
-                <p className="text-gray-400">Recent projects from our studio</p>
-              </Reveal>
-              <Reveal delay={0.2}>
-                <button className="hidden md:flex items-center gap-2 text-indigo-400 hover:text-white transition-colors font-medium">
-                  View all projects <ChevronRight className="w-4 h-4" />
-                </button>
-              </Reveal>
-            </div>
-
-            <div className="space-y-32">
-              {/* Project 1 */}
-              <div className="group grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <Reveal className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-white/10 bg-gray-900 cursor-pointer">
-                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 group-hover:opacity-0 transition-opacity duration-700 z-10"></div>
-                  {/* Mock Interface Visual */}
-                  <div className="w-full h-full bg-gray-900 relative p-8 group-hover:scale-105 transition-transform duration-1000 ease-[0.25,0.1,0.25,1]">
-                      <div className="w-full h-full bg-gray-800 rounded-xl border border-white/5 shadow-2xl overflow-hidden flex flex-col">
-                         <div className="h-8 border-b border-white/5 flex items-center px-4 gap-2">
-                            <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
-                            <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
-                            <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
-                         </div>
-                         <div className="flex-1 bg-gradient-to-br from-gray-900 to-black relative p-6">
-                             {/* Abstract UI elements */}
-                             <div className="w-1/2 h-8 bg-white/10 rounded mb-4"></div>
-                             <div className="w-full h-32 bg-indigo-500/10 border border-indigo-500/20 rounded-lg mb-4"></div>
-                             <div className="flex gap-4">
-                                <div className="w-1/3 h-24 bg-white/5 rounded-lg"></div>
-                                <div className="w-1/3 h-24 bg-white/5 rounded-lg"></div>
-                             </div>
-                         </div>
-                      </div>
-                  </div>
-                </Reveal>
-                <Reveal delay={0.2}>
-                  <div className="space-y-8">
-                    <div className="flex items-center gap-4 mb-4">
-                       <span className="text-xs font-bold tracking-widest text-indigo-400 uppercase border border-indigo-400/30 px-3 py-1 rounded-full bg-indigo-500/10">Youth Leadership & Debate Forum</span>
-                       <span className="text-gray-500 text-sm font-mono">2025</span>
-                    </div>
-                    <h3 className="text-4xl font-bold group-hover:text-indigo-400 transition-colors duration-300">Open Word War</h3>
-                    <p className="text-gray-400 leading-relaxed text-lg">
-                      A complete redesign of their visual identity, delivering polished and professional graphic design materials for both digital and print.
-                    </p>
-                    <ul className="flex flex-wrap gap-3">
-                      {['Graphic Design', 'Adobe Suite', 'Branding', 'Canva'].map(tag => (
-                        <span key={tag} className="text-sm text-gray-400 border border-white/10 px-3 py-1 rounded-full">{tag}</span>
-                      ))}
-                    </ul>
-                    <div className="pt-4">
-                        <button className="text-white font-bold border-b border-white hover:border-indigo-400 hover:text-indigo-400 pb-1 transition-all">Case Study</button>
-                    </div>
-                  </div>
-                </Reveal>
-              </div>
-
-              {/* Project 2 */}
-              <div className="group grid grid-cols-1 md:grid-cols-2 gap-12 items-center md:flex-row-reverse">
-                <Reveal className="order-2 md:order-1 space-y-8">
-                  <div className="flex items-center gap-4 mb-4">
-                     <span className="text-xs font-bold tracking-widest text-indigo-400 uppercase border border-indigo-400/30 px-3 py-1 rounded-full bg-indigo-500/10">Homestay & Cabin Rentals</span>
-                     <span className="text-gray-500 text-sm font-mono">2025</span>
-                  </div>
-                  <h3 className="text-4xl font-bold group-hover:text-indigo-400 transition-colors duration-300">Jibhi Homestead Cabins</h3>
-                  <p className="text-gray-400 leading-relaxed text-lg">
-                    Developed a fresh visual identity for Jibhi Homestead Cabins, creating nature-inspired graphic design assets that reflect their rustic, homely stay experience.
-                  </p>
-                  <ul className="flex flex-wrap gap-3">
-                      {['Product Design', 'Graphic Design', 'Strategy', 'Dashboard'].map(tag => (
-                        <span key={tag} className="text-sm text-gray-400 border border-white/10 px-3 py-1 rounded-full">{tag}</span>
-                      ))}
-                    </ul>
-                    <div className="pt-4">
-                        <button className="text-white font-bold border-b border-white hover:border-indigo-400 hover:text-indigo-400 pb-1 transition-all">Case Study</button>
-                    </div>
-                </Reveal>
-                <Reveal delay={0.2} className="order-1 md:order-2 relative aspect-[4/3] rounded-3xl overflow-hidden border border-white/10 bg-gray-900 cursor-pointer">
-                   <div className="absolute inset-0 bg-gradient-to-bl from-purple-500/10 to-indigo-500/10 group-hover:opacity-0 transition-opacity duration-700 z-10"></div>
-                   {/* Mock Interface Visual */}
-                  <div className="w-full h-full bg-black relative p-8 group-hover:scale-105 transition-transform duration-1000 ease-[0.25,0.1,0.25,1] flex items-center justify-center">
-                       <div className="w-[80%] h-[80%] rounded-full bg-indigo-500/20 blur-[80px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-                       <div className="relative z-10 border border-white/10 bg-white/5 backdrop-blur-xl p-8 rounded-2xl w-full max-w-sm">
-                          <div className="flex items-center gap-3 mb-6">
-                             <div className="w-8 h-8 rounded-full bg-indigo-500"></div>
-                             <div className="h-2 w-24 bg-white/20 rounded"></div>
-                          </div>
-                          <div className="space-y-3">
-                             <div className="h-2 w-full bg-white/10 rounded"></div>
-                             <div className="h-2 w-full bg-white/10 rounded"></div>
-                             <div className="h-2 w-2/3 bg-white/10 rounded"></div>
-                          </div>
-                          <div className="mt-6 flex justify-end">
-                             <div className="h-8 w-20 bg-indigo-600 rounded-lg"></div>
-                          </div>
-                       </div>
-                  </div>
-                </Reveal>
-              </div>
-            </div>
-         </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-32 border-t border-white/5 relative z-10">
-  <div className="container mx-auto px-6">
-
-    <Reveal className="text-center mb-16">
-      <h2 className="text-3xl font-bold mb-4">Client Stories</h2>
-    </Reveal>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-      {[
-        {
-          quote: "TVL Studios transformed our vague ideas into a world-class digital product. The attention to detail is unmatched.",
-          author: "Sarah Jenkins",
-          
-        },
-        {
-          quote: "The team moves fast but never breaks things. They are the perfect partner for high-growth startups.",
-          author: "David Chen",
-         
-        },
-        {
-          quote: "We've worked with many agencies, but TVL is in a league of its own. Truly futuristic design work.",
-          author: "Elena Rodriguez",
-         
-        }
-      ].map((item, i) => (
-        <Reveal key={i} delay={i * 0.1}>
-          <div className="p-8 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-sm relative flex flex-col h-full">
-
-            {/* Icon */}
-            <MessageSquare className="absolute top-6 right-6 text-white/10 w-8 h-8" />
-
-            {/* Quote */}
-            <p className="text-gray-300 mb-6 text-lg leading-relaxed">
-              "{item.quote}"
-            </p>
-
-            {/* Spacer pushes author to bottom = perfect symmetry */}
-            <div className="flex-grow"></div>
-
-            {/* Author Block */}
-            <div className="mt-4">
-              <div className="text-white font-bold">{item.author}</div>
-              <div className="text-indigo-400 text-sm">{item.role}</div>
-            </div>
-
-          </div>
-        </Reveal>
-      ))}
-
-    </div>
-  </div>
-</section>
-
-
-      {/* CTA / Footer */}
-      <footer className="bg-black pt-32 pb-12 border-t border-white/10 relative overflow-hidden">
-        {/* Footer Glow */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-indigo-900/20 rounded-full blur-[120px] pointer-events-none"></div>
-
+      {/* Services Section */}
+      <section id="services" className="relative py-20 md:py-24">
         <div className="container mx-auto px-6 relative z-10">
           <Reveal>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-24">
+            <div className="flex justify-between items-end mb-10">
               <div>
-                <h2 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight">Let's build the <br/> future.</h2>
-                <p className="text-xl text-gray-400 max-w-md mb-10">
-                  Ready to elevate your brand? We are currently accepting new partnerships for Q1 2026.
+                <p className="text-xs font-semibold tracking-[0.2em] text-indigo-300 mb-3 uppercase">
+                  SERVICES
                 </p>
-                <button 
-  onClick={() => window.location.href = "/start-project"}
-  className="px-6 py-2.5 bg-white text-black rounded-full text-sm font-bold hover:bg-indigo-50 transition-all duration-300 hover:scale-105 active:scale-95"
-
->
-  Start a Project
-</button>
+                <h2 className="text-2xl md:text-3xl font-semibold text-white">
+                  Built for AI-native brands & ambitious teams.
+                </h2>
               </div>
-              <div className="grid grid-cols-2 gap-12 md:pl-20">
-                <div>
-                  <h4 className="text-white font-bold mb-8 text-lg">Studio</h4>
-                  <ul className="space-y-6 text-gray-400">
-                    <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                    <li><a href="#services" className="hover:text-white transition-colors">Services</a></li>
-                    <li><a href="#process" className="hover:text-white transition-colors">Process</a></li>
-                    <li><a href="#work" className="hover:text-white transition-colors">Our Work</a></li>
-                  </ul>
-                </div>
-<div>
-  <h4 className="text-white font-bold mb-8 text-lg">Connect</h4>
-  <ul className="space-y-6 text-gray-400">
-    
-    <li>
-      <a 
-        href="https://www.instagram.com/tvlstudios.xyz/" 
-        className="hover:text-white transition-colors flex items-center gap-3"
-      >
-        <InstagramIcon size={20} />
-        <span>Instagram</span>
-      </a>
-    </li>
-
-    <li>
-      <a 
-        href="mailto:tvlstudioz@gmail.com" 
-        className="hover:text-white transition-colors flex items-center gap-3"
-      >
-        <Mail size={20} />
-        <span>tvlstudioz@gmail.com</span>
-      </a>
-    </li>
-
-  </ul>
-</div>
-
-              </div>
+              <p className="hidden md:block text-xs text-gray-400 max-w-xs text-right">
+                We plug into your stack as your design, dev, and motion partner — or help you launch something entirely new.
+              </p>
             </div>
           </Reveal>
 
-          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 text-sm text-gray-600">
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+            <ServiceCard 
+              Icon={Cpu}
+              title="AI-Powered Brand & Systems"
+              desc="Naming, identity, guidelines, and content systems designed with AI workflows that keep you consistent and fast."
+              badge="BRAND"
+            />
+            <ServiceCard 
+              Icon={MonitorPlay}
+              title="Web Experiences & Product Sites"
+              desc="Launch-ready marketing sites, product pages, and microsites with motion, responsiveness, and performance baked in."
+              badge="WEB"
+            />
+            <ServiceCard 
+              Icon={Aperture}
+              title="Graphics, Motion & Content"
+              desc="Art direction, graphics, social kits, and micro-animations tailored for launches, campaigns, and always-on storytelling."
+              badge="CONTENT"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Process Section */}
+      <section id="process" className="relative py-20 md:py-24">
+        <div className="container mx-auto px-6 relative z-10">
+          <Reveal>
+            <p className="text-xs font-semibold tracking-[0.2em] text-indigo-300 mb-3 uppercase">
+              PROCESS
+            </p>
+            <h2 className="text-2xl md:text-3xl font-semibold text-white mb-6">
+              A clear, calm process from brief to launch.
+            </h2>
+          </Reveal>
+
+          <div className="grid md:grid-cols-4 gap-4 md:gap-6">
+            {[
+              {
+                step: '01',
+                title: 'Discovery',
+                body: 'We align on goals, audience, constraints, and opportunities.'
+              },
+              {
+                step: '02',
+                title: 'Concept & Direction',
+                body: 'Moodboards, directions, and initial structures explored collaboratively.'
+              },
+              {
+                step: '03',
+                title: 'Build & Refine',
+                body: 'Design, development, and content build-out with tight feedback loops.'
+              },
+              {
+                step: '04',
+                title: 'Launch & Support',
+                body: 'Hand-off, documentation, and support so you can run with confidence.'
+              }
+            ].map((item, index) => (
+              <Reveal key={item.step} delay={index * 0.05}>
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col justify-between h-full">
+                  <div>
+                    <p className="text-[11px] text-indigo-300 mb-2">Step {item.step}</p>
+                    <h3 className="text-sm md:text-base font-medium text-white mb-2">{item.title}</h3>
+                    <p className="text-xs md:text-[13px] text-gray-400 leading-relaxed">{item.body}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Work / Projects Section */}
+      <section id="work" className="relative py-20 md:py-24">
+        <div className="container mx-auto px-6 relative z-10">
+          <Reveal>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+              <div>
+                <p className="text-xs font-semibold tracking-[0.2em] text-indigo-300 mb-3 uppercase">
+                  WORK
+                </p>
+                <h2 className="text-2xl md:text-3xl font-semibold text-white">
+                  Recent explorations & builds.
+                </h2>
+              </div>
+              <p className="text-xs text-gray-400 max-w-sm">
+                We work across SaaS, creators, and AI-native products. Real client work will live here — until then, a preview of the kind of quality we aim for.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+            {/* Project Cards (placeholder content) */}
+            <Reveal>
+              <div className="group bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-indigo-400/60 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_24px_60px_rgba(79,70,229,0.4)]">
+                <div className="aspect-[4/3] bg-gradient-to-br from-indigo-500/40 via-slate-900 to-purple-500/30 relative overflow-hidden">
+                  <div className="absolute inset-6 rounded-3xl border border-white/20 bg-black/40 backdrop-blur-xl" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Cpu className="w-10 h-10 text-indigo-200" />
+                  </div>
+                </div>
+                <div className="p-5">
+                  <p className="text-xs text-indigo-300 mb-1">Concept</p>
+                  <h3 className="text-sm md:text-base font-medium text-white mb-1">
+                    AI Launch Microsite
+                  </h3>
+                  <p className="text-xs text-gray-400">
+                    A tight, cinematic product story for an AI-first tool.
+                  </p>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.05}>
+              <div className="group bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-indigo-400/60 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_24px_60px_rgba(79,70,229,0.4)]">
+                <div className="aspect-[4/3] bg-gradient-to-br from-emerald-500/30 via-slate-900 to-blue-500/30 relative overflow-hidden">
+                  <div className="absolute inset-6 rounded-3xl border border-white/20 bg-black/40 backdrop-blur-xl" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Globe className="w-10 h-10 text-emerald-200" />
+                  </div>
+                </div>
+                <div className="p-5">
+                  <p className="text-xs text-emerald-300 mb-1">Concept</p>
+                  <h3 className="text-sm md:text-base font-medium text-white mb-1">
+                    Product Marketing Site
+                  </h3>
+                  <p className="text-xs text-gray-400">
+                    A responsive, conversion-minded home for a SaaS launch.
+                  </p>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.1}>
+              <div className="group bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-indigo-400/60 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_24px_60px_rgba(79,70,229,0.4)]">
+                <div className="aspect-[4/3] bg-gradient-to-br from-fuchsia-500/30 via-slate-900 to-indigo-500/30 relative overflow-hidden">
+                  <div className="absolute inset-6 rounded-3xl border border-white/20 bg-black/40 backdrop-blur-xl" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Aperture className="w-10 h-10 text-fuchsia-200" />
+                  </div>
+                </div>
+                <div className="p-5">
+                  <p className="text-xs text-fuchsia-300 mb-1">Concept</p>
+                  <h3 className="text-sm md:text-base font-medium text-white mb-1">
+                    Visual Identity System
+                  </h3>
+                  <p className="text-xs text-gray-400">
+                    Graphic language for a creator-led AI content brand.
+                  </p>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact / CTA Section */}
+      <section className="relative py-20 md:py-24">
+        <div className="container mx-auto px-6 relative z-10">
+          <Reveal>
+            <div className="bg-white/5 border border-white/10 rounded-3xl px-6 py-8 md:px-10 md:py-10 max-w-3xl mx-auto backdrop-blur-xl">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+                <div>
+                  <p className="text-xs font-semibold tracking-[0.2em] text-indigo-300 mb-2 uppercase">
+                    GET IN TOUCH
+                  </p>
+                  <h2 className="text-xl md:text-2xl font-semibold text-white mb-1">
+                    Have a launch, product, or idea in mind?
+                  </h2>
+                  <p className="text-xs md:text-[13px] text-gray-400">
+                    Tell us a bit about what you&apos;re building — we&apos;ll follow up with timelines, ideas, and fit.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 text-sm text-gray-300">
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-indigo-300" />
+                    <span>contact@tvlstudios.com</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-indigo-300" />
+                    <span>Project calls via email</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-3">
+                <button
+                  onClick={() => window.location.href = "/start-project"}
+                  className="px-6 py-3 rounded-full bg-white text-black text-sm font-medium flex items-center gap-2 hover:bg-gray-100 transition-all duration-200"
+                >
+                  Start a Project
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    const el = document.getElementById('about');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className="px-6 py-3 rounded-full border border-white/20 bg-black/20 text-sm text-gray-100 hover:bg-white/10 transition-all duration-200"
+                >
+                  Learn more about the studio
+                </button>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-black pt-16 pb-10 border-t border-white/10 relative overflow-hidden">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[520px] h-[520px] bg-gradient-to-t from-indigo-500/20 via-purple-500/10 to-transparent rounded-full blur-[120px] pointer-events-none" />
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">T</span>
+                </div>
+                <span className="text-sm font-semibold tracking-tight text-white">TVL STUDIOS</span>
+              </div>
+              <p className="text-xs text-gray-400 max-w-xs">
+                A small studio for teams who care about details — combining AI, design, and dev into one tight crew.
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-300 mb-3">Navigation</p>
+              <div className="flex flex-col gap-1.5 text-xs text-gray-400">
+                <a href="#about" className="hover:text-white transition-colors">Studio</a>
+                <a href="#services" className="hover:text-white transition-colors">Services</a>
+                <a href="#work" className="hover:text-white transition-colors">Work</a>
+                <a href="/start-project" className="hover:text-white transition-colors">Start a Project</a>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-300 mb-3">Elsewhere</p>
+              <div className="flex flex-col gap-1.5 text-xs text-gray-400">
+                <a 
+                  href="https://instagram.com" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="inline-flex items-center gap-1 hover:text-white transition-colors"
+                >
+                  <InstagramIcon className="w-3.5 h-3.5" />
+                  Instagram
+                </a>
+                <a 
+                  href="https://linkedin.com" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="inline-flex items-center gap-1 hover:text-white transition-colors"
+                >
+                  <Linkedin className="w-3.5 h-3.5" />
+                  LinkedIn
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-center pt-5 border-t border-white/10 text-[11px] text-gray-500 gap-3">
             <p>&copy; 2026 TVL Studios. All rights reserved.</p>
-            <div className="flex gap-8 mt-6 md:mt-0">
-              <a href="/privacy-policy" className="hover:text-gray-400 transition-colors">Privacy Policy</a>
-              <a href="/terms-of-service" className="hover:text-gray-400 transition-colors">Terms of Service</a>
-              
+            <div className="flex gap-6">
+              <a href="/privacy-policy" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
+              <a href="/terms-of-service" className="hover:text-gray-300 transition-colors">Terms of Service</a>
             </div>
           </div>
         </div>
