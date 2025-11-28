@@ -224,7 +224,7 @@ export default function PrivacyPolicyPage() {
             <h2 className="text-2xl font-semibold mt-10">8. Contact Us</h2>
             <p>If you have any questions or concerns about this Privacy Policy, you can contact us at:</p>
             <p>
-              <strong>Email:</strong> [Add your contact email here] <br />
+              <strong>Email:</strong> tvlstudioz@gmail.com <br />
               <strong>Company:</strong> TVL Studios <br />
               <strong>Founders:</strong> Uday Sood, Vishal Baibhav Panda <br />
               <strong>Co-Founder:</strong> Arnav Verma
