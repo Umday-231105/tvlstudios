@@ -187,7 +187,7 @@ const Navbar = () => {
           ))}
           <button 
   onClick={() => window.location.href = "/start-project"}
-  className="px-10 py-5 bg-white text-sm text-black"
+  className="px-6 py-2.5 bg-white text-black rounded-full text-sm font-bold hover:bg-indigo-50 transition-all duration-300 hover:scale-105 active:scale-95"
 
 >
   Start Project
