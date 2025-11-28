@@ -16,10 +16,7 @@
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.0.0",
-
-    "three": "^0.168.0",
-    "@react-three/fiber": "^8.15.10",
-    "@react-three/drei": "^9.90.6"
+    "three": "^0.168.0"      <-- 🔹 move this line here
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",
