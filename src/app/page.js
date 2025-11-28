@@ -33,189 +33,198 @@ const ThreeBackground = () => {
     const container = mountRef.current;
     if (!container) return;
 
-    // Scene
+    // Scene setup
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x020617, 25, 90);
+    scene.fog = new THREE.Fog(0x020617, 25, 80);
 
-    // Camera
     const camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
       0.1,
-      150
+      120
     );
-    camera.position.set(0, 0, 24);
+    camera.position.set(0, 0, 20);
 
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputEncoding = THREE.sRGBEncoding;
     container.appendChild(renderer.domElement);
 
-    // Lights – cool AI / data-center vibe
-    const ambient = new THREE.AmbientLight(0x4b5563, 0.8);
+    // Lighting – cool tech / AI mood
+    const ambient = new THREE.AmbientLight(0x4b5563, 0.7);
     scene.add(ambient);
 
-    const keyLight = new THREE.DirectionalLight(0x4f46e5, 1.5);
-    keyLight.position.set(8, 10, 12);
+    const keyLight = new THREE.DirectionalLight(0x4f46e5, 1.4);
+    keyLight.position.set(6, 10, 10);
     scene.add(keyLight);
 
     const rimLight = new THREE.DirectionalLight(0x22d3ee, 1.0);
-    rimLight.position.set(-10, -6, -8);
+    rimLight.position.set(-8, -6, -4);
     scene.add(rimLight);
 
-    const accentLight = new THREE.PointLight(0xa855f7, 1.2, 80);
-    accentLight.position.set(0, 6, 10);
-    scene.add(accentLight);
-
-    // Root group to rotate slightly
+    // Root group
     const root = new THREE.Group();
     scene.add(root);
 
-    // ---------- AI CORE (neural sphere) ----------
-    const coreGeo = new THREE.SphereGeometry(3.5, 64, 64);
+    // --- Neural Core (AI brain) ---
+    const coreGeo = new THREE.IcosahedronGeometry(3, 3);
     const coreMat = new THREE.MeshStandardMaterial({
-      color: 0x6366f1,
+      color: 0x4f46e5,
       metalness: 0.9,
-      roughness: 0.15,
+      roughness: 0.2,
       emissive: 0x1d1b4b,
-      emissiveIntensity: 1.0
+      emissiveIntensity: 1.0,
     });
-    const core = new THREE.Mesh(coreGeo, coreMat);
-    root.add(core);
+    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    root.add(coreMesh);
 
     // Wireframe overlay (neural mesh)
     const coreWireMat = new THREE.MeshBasicMaterial({
       color: 0x818cf8,
       wireframe: true,
       transparent: true,
-      opacity: 0.45
+      opacity: 0.4,
     });
     const coreWire = new THREE.Mesh(coreGeo, coreWireMat);
     root.add(coreWire);
 
-    // ---------- DATA RINGS (like AGPT orbits) ----------
+    // --- Data Rings (orbits) ---
     const ringsGroup = new THREE.Group();
     root.add(ringsGroup);
 
     const ringConfigs = [
-      { radius: 5.5, color: 0x22d3ee, tiltX: 0.4, tiltY: 0.1, speed: 0.12 },
-      { radius: 6.8, color: 0xa855f7, tiltX: -0.25, tiltY: 0.6, speed: -0.08 },
-      { radius: 8.0, color: 0x38bdf8, tiltX: 0.1, tiltY: -0.4, speed: 0.18 }
+      { radius: 5.2, speed: 0.12, tilt: 0.3 },
+      { radius: 6.4, speed: -0.08, tilt: -0.2 },
+      { radius: 7.4, speed: 0.18, tilt: 0.6 },
     ];
 
-    ringConfigs.forEach((cfg) => {
-      const geo = new THREE.TorusGeometry(cfg.radius, 0.07, 16, 220);
-      const mat = new THREE.MeshBasicMaterial({
-        color: cfg.color,
+    ringConfigs.forEach((cfg, idx) => {
+      const ringGeo = new THREE.TorusGeometry(cfg.radius, 0.06, 16, 220);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: idx === 1 ? 0x22d3ee : 0xa855f7,
         transparent: true,
-        opacity: 0.7
+        opacity: 0.7,
       });
-      const ring = new THREE.Mesh(geo, mat);
-      ring.rotation.x = cfg.tiltX;
-      ring.rotation.y = cfg.tiltY;
-      ring.userData.speed = cfg.speed;
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = cfg.tilt;
       ringsGroup.add(ring);
+      ring.userData = { speed: cfg.speed };
     });
 
-    // ---------- NETWORK NODES & LINKS ----------
+    // --- Circuit grid planes ---
+    const gridHelper1 = new THREE.GridHelper(60, 40, 0x1f2937, 0x111827);
+    gridHelper1.position.y = -8;
+    gridHelper1.position.z = -10;
+    gridHelper1.rotation.x = -Math.PI / 2;
+    scene.add(gridHelper1);
+
+    const gridHelper2 = new THREE.GridHelper(40, 30, 0x1f2937, 0x111827);
+    gridHelper2.position.y = 10;
+    gridHelper2.position.z = -20;
+    gridHelper2.rotation.x = Math.PI / 2.5;
+    scene.add(gridHelper2);
+
+    // --- Connection Nodes & Links (network graph) ---
     const nodesGroup = new THREE.Group();
     root.add(nodesGroup);
 
-    const nodeGeo = new THREE.SphereGeometry(0.18, 16, 16);
+    const nodeGeo = new THREE.SphereGeometry(0.16, 16, 16);
     const nodeMat = new THREE.MeshBasicMaterial({
       color: 0x22d3ee,
       transparent: true,
-      opacity: 0.95
+      opacity: 0.9,
     });
 
-    const nodes = [];
+    const linkGeo = new THREE.BufferGeometry();
     const linkPositions = [];
+    const nodes = [];
 
-    for (let i = 0; i < 32; i++) {
+    for (let i = 0; i < 26; i++) {
       const r = 6 + Math.random() * 3;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.random() * Math.PI;
 
       const x = r * Math.sin(phi) * Math.cos(theta);
-      const y = (r * Math.cos(phi) * 0.7);
+      const y = r * Math.cos(phi) * 0.7;
       const z = r * Math.sin(phi) * Math.sin(theta);
 
       const node = new THREE.Mesh(nodeGeo, nodeMat);
       node.position.set(x, y, z);
       node.userData = {
         baseY: y,
-        floatOffset: Math.random() * Math.PI * 2
+        floatOffset: Math.random() * Math.PI * 2,
       };
       nodesGroup.add(node);
       nodes.push(node);
     }
 
-    // simple connection graph (like circuits between nodes)
+    // simple links between node pairs
     for (let i = 0; i < nodes.length; i++) {
       const a = nodes[i].position;
-      const b = nodes[(i + 4) % nodes.length].position;
+      const b = nodes[(i + 3) % nodes.length].position;
       linkPositions.push(a.x, a.y, a.z, b.x, b.y, b.z);
     }
 
-    const linkGeo = new THREE.BufferGeometry();
+    const linkPosArray = new Float32Array(linkPositions);
     linkGeo.setAttribute(
       "position",
-      new THREE.Float32BufferAttribute(linkPositions, 3)
+      new THREE.BufferAttribute(linkPosArray, 3)
     );
     const linkMat = new THREE.LineBasicMaterial({
       color: 0x22d3ee,
       transparent: true,
-      opacity: 0.35
+      opacity: 0.35,
     });
     const links = new THREE.LineSegments(linkGeo, linkMat);
     nodesGroup.add(links);
 
-    // ---------- PARTICLE FIELD (data dust) ----------
+    // --- Particle field ("data dust") ---
     const particlesGeo = new THREE.BufferGeometry();
-    const particleCount = 1000;
-    const particlePos = new Float32Array(particleCount * 3);
-    const particleCol = new Float32Array(particleCount * 3);
+    const particleCount = 900;
+    const posArray = new Float32Array(particleCount * 3);
+    const colorArray = new Float32Array(particleCount * 3);
 
-    for (let i = 0; i < particleCount; i++) {
-      const i3 = i * 3;
-      const x = (Math.random() - 0.5) * 70;
-      const y = (Math.random() - 0.5) * 40;
-      const z = -Math.random() * 90;
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      const x = (Math.random() - 0.5) * 60;
+      const y = (Math.random() - 0.5) * 34;
+      const z = -Math.random() * 80;
 
-      particlePos[i3] = x;
-      particlePos[i3 + 1] = y;
-      particlePos[i3 + 2] = z;
+      posArray[i] = x;
+      posArray[i + 1] = y;
+      posArray[i + 2] = z;
 
-      const tint = 0.7 + Math.random() * 0.3;
-      particleCol[i3] = 0.35 * tint;
-      particleCol[i3 + 1] = 0.75 * tint;
-      particleCol[i3 + 2] = 1.0 * tint;
+      const tint = 0.6 + Math.random() * 0.4;
+      colorArray[i] = 0.4 * tint;
+      colorArray[i + 1] = 0.8 * tint;
+      colorArray[i + 2] = 1.0 * tint;
     }
 
     particlesGeo.setAttribute(
       "position",
-      new THREE.BufferAttribute(particlePos, 3)
+      new THREE.BufferAttribute(posArray, 3)
     );
     particlesGeo.setAttribute(
       "color",
-      new THREE.BufferAttribute(particleCol, 3)
+      new THREE.BufferAttribute(colorArray, 3)
     );
 
     const particlesMat = new THREE.PointsMaterial({
-      size: 0.07,
+      size: 0.06,
       vertexColors: true,
       transparent: true,
-      opacity: 0.75,
+      opacity: 0.7,
       depthWrite: false,
-      blending: THREE.AdditiveBlending
+      blending: THREE.AdditiveBlending,
     });
 
     const particles = new THREE.Points(particlesGeo, particlesMat);
     scene.add(particles);
 
-    // ---------- MOUSE INTERACTION (parallax) ----------
+    // Mouse interaction
     let mouseX = 0;
     let mouseY = 0;
 
@@ -226,18 +235,18 @@ const ThreeBackground = () => {
 
     window.addEventListener("mousemove", handleMouseMove);
 
-    // Resize
+    // Resize handler
     const handleResize = () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      camera.aspect = w / h;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
+      renderer.setSize(width, height);
     };
 
     window.addEventListener("resize", handleResize);
 
-    // ---------- ANIMATION LOOP ----------
+    // Animation loop
     let frameId;
     const clock = new THREE.Clock();
 
@@ -245,35 +254,35 @@ const ThreeBackground = () => {
       frameId = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      // Whole system slow rotation
+      // Rotate whole system
       root.rotation.y = t * 0.06;
-      root.rotation.x = Math.sin(t * 0.12) * 0.08;
+      root.rotation.x = Math.sin(t * 0.1) * 0.08;
 
-      // Core subtle motion
-      core.rotation.y += 0.004;
-      core.rotation.x += 0.002;
+      coreMesh.rotation.y += 0.004;
+      coreMesh.rotation.x += 0.002;
       coreWire.rotation.y -= 0.002;
 
-      // Rings spinning
+      // Rings
       ringsGroup.children.forEach((ring) => {
         const speed = ring.userData.speed || 0.1;
         ring.rotation.z += speed * 0.01;
       });
 
-      // Nodes float
+      // Node floating
       nodes.forEach((node) => {
         const { baseY, floatOffset } = node.userData;
-        node.position.y = baseY + Math.sin(t * 1.2 + floatOffset) * 0.25;
+        node.position.y = baseY + Math.sin(t * 1.1 + floatOffset) * 0.25;
       });
 
       // Camera parallax
       const targetX = mouseX * 2.4;
       const targetY = mouseY * 1.6;
+
       camera.position.x += (targetX - camera.position.x) * 0.04;
       camera.position.y += (targetY - camera.position.y) * 0.04;
       camera.lookAt(0, 0, 0);
 
-      // Data dust slow spin
+      // Particle drift
       particles.rotation.z = t * 0.02;
 
       renderer.render(scene, camera);
@@ -281,7 +290,7 @@ const ThreeBackground = () => {
 
     animate();
 
-    // ---------- CLEANUP ----------
+    // Cleanup
     return () => {
       cancelAnimationFrame(frameId);
       window.removeEventListener("mousemove", handleMouseMove);
@@ -294,10 +303,10 @@ const ThreeBackground = () => {
       coreGeo.dispose();
       coreMat.dispose();
       coreWireMat.dispose();
-      linkGeo.dispose();
-      linkMat.dispose();
       nodeGeo.dispose();
       nodeMat.dispose();
+      linkGeo.dispose();
+      linkMat.dispose();
       particlesGeo.dispose();
       particlesMat.dispose();
 
@@ -309,6 +318,7 @@ const ThreeBackground = () => {
     <div ref={mountRef} className="fixed inset-0 z-0 pointer-events-none" />
   );
 };
+
 
 
 // 2. Dynamic Glowing Orbs Background
