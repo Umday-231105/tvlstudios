@@ -187,7 +187,8 @@ const Navbar = () => {
           ))}
           <button 
   onClick={() => window.location.href = "/start-project"}
-  className="px-6 py-2.5 bg-white text-sm text-black ..."
+  className="px-10 py-5 bg-white text-sm text-black"
+
 >
   Start Project
 </button>
@@ -567,7 +568,8 @@ export default function App() {
                 </p>
                 <button 
   onClick={() => window.location.href = "/start-project"}
-  className="px-10 py-5 bg-white text-sm text-black ..."
+  className="px-10 py-5 bg-white text-sm text-black"
+
 >
   Start a Project
 </button>
@@ -576,10 +578,10 @@ export default function App() {
                 <div>
                   <h4 className="text-white font-bold mb-8 text-lg">Studio</h4>
                   <ul className="space-y-6 text-gray-400">
-                    <li><a href="#work" className="hover:text-white transition-colors">About Us</a></li>
+                    <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
                     <li><a href="#services" className="hover:text-white transition-colors">Services</a></li>
                     <li><a href="#process" className="hover:text-white transition-colors">Process</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors">Our Work</a></li>
+                    <li><a href="#work" className="hover:text-white transition-colors">Our Work</a></li>
                   </ul>
                 </div>
                 <div>
