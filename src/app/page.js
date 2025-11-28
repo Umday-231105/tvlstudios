@@ -605,7 +605,7 @@ export default function App() {
     
     <li>
       <a 
-        href="#" 
+        href="https://www.instagram.com/tvlstudios.xyz/" 
         className="hover:text-white transition-colors flex items-center gap-3"
       >
         <InstagramIcon size={20} />
