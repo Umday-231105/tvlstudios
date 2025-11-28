@@ -633,8 +633,8 @@ export default function App() {
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 text-sm text-gray-600">
             <p>&copy; 2026 TVL Studios. All rights reserved.</p>
             <div className="flex gap-8 mt-6 md:mt-0">
-              <a href="#" className="hover:text-gray-400 transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-gray-400 transition-colors">Terms of Service</a>
+              <a href="/privacy-policy" className="hover:text-gray-400 transition-colors">Privacy Policy</a>
+              <a href="/terms-of-service" className="hover:text-gray-400 transition-colors">Terms of Service</a>
               
             </div>
           </div>
