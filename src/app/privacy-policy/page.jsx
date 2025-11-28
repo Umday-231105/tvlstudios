@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
       <div className="max-w-4xl mx-auto">
 
         <h1 className="text-4xl font-bold mb-6">Privacy Policy</h1>
-        <p className="text-gray-400 mb-10">Last Updated: [Insert Date]</p>
+        <p className="text-gray-400 mb-10">Last Updated: 28/11/2025 </p>
 
         <div className="space-y-6 text-gray-300 leading-relaxed">
 
@@ -68,7 +68,7 @@ export default function PrivacyPolicy() {
             If you have questions or concerns, please reach out to us:
           </p>
           <p>
-            <strong>Email (add later):</strong> contact@tvlstudios.com <br />
+            <strong>Email:</strong> tvlstudioz@gmail.com <br />
             <strong>Founders:</strong> Uday Sood, Vishal Baibhav Panda <br />
             <strong>Co-Founder:</strong> Arnav Verma
           </p>
