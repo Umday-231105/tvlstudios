@@ -13,11 +13,9 @@ import {
   Aperture,
   MonitorPlay,
   Instagram as InstagramIcon,
-  Linkedin,
   ArrowRight,
   CheckCircle2,
   Mail,
-  MessageSquare,
 } from "lucide-react";
 import * as THREE from "three";
 
@@ -30,7 +28,7 @@ const SMOOTH_TRANSITION = {
 };
 
 // ----------------------
-// AI / Tech Three.js BG
+// Subtle, professional 3D background
 // ----------------------
 const ThreeBackground = () => {
   const mountRef = useRef(null);
@@ -39,187 +37,111 @@ const ThreeBackground = () => {
     const container = mountRef.current;
     if (!container) return;
 
-    // Scene
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x020617, 25, 90);
+    scene.background = new THREE.Color(0x020617);
 
-    // Camera
     const camera = new THREE.PerspectiveCamera(
-      45,
+      40,
       window.innerWidth / window.innerHeight,
       0.1,
       150
     );
-    camera.position.set(0, 0, 24);
+    camera.position.set(0, 0, 26);
 
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.outputEncoding = THREE.sRGBEncoding;
     container.appendChild(renderer.domElement);
 
-    // Lights – AI data-center vibe
-    const ambient = new THREE.AmbientLight(0x4b5563, 0.8);
+    // Soft, neutral lighting
+    const ambient = new THREE.AmbientLight(0x9ca3af, 0.7);
     scene.add(ambient);
 
-    const keyLight = new THREE.DirectionalLight(0x4f46e5, 1.5);
-    keyLight.position.set(8, 10, 12);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 0.4);
+    keyLight.position.set(6, 9, 12);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x22d3ee, 1.0);
-    rimLight.position.set(-10, -6, -8);
-    scene.add(rimLight);
-
-    const accentLight = new THREE.PointLight(0xa855f7, 1.2, 80);
-    accentLight.position.set(0, 6, 10);
-    scene.add(accentLight);
+    const sideLight = new THREE.DirectionalLight(0x4f46e5, 0.35);
+    sideLight.position.set(-10, -4, 8);
+    scene.add(sideLight);
 
     // Root group
     const root = new THREE.Group();
     scene.add(root);
 
-    // ----- AI Core (neural sphere) -----
-    const coreGeo = new THREE.SphereGeometry(3.5, 64, 64);
-    const coreMat = new THREE.MeshStandardMaterial({
-      color: 0x6366f1,
-      metalness: 0.9,
-      roughness: 0.15,
-      emissive: 0x1d1b4b,
-      emissiveIntensity: 1.0,
+    // Subtle grid plane in the back (like a structured layout hint)
+    const gridHelper = new THREE.GridHelper(80, 40, 0x1f2937, 0x111827);
+    gridHelper.position.y = -10;
+    gridHelper.position.z = -20;
+    gridHelper.rotation.x = -Math.PI / 2;
+    gridHelper.material.opacity = 0.35;
+    gridHelper.material.transparent = true;
+    root.add(gridHelper);
+
+    // Horizontal "cards" suggesting layout / sections
+    const panelMatBase = new THREE.MeshStandardMaterial({
+      color: 0x0b1220,
+      metalness: 0.25,
+      roughness: 0.85,
     });
-    const core = new THREE.Mesh(coreGeo, coreMat);
-    root.add(core);
 
-    const coreWireMat = new THREE.MeshBasicMaterial({
-      color: 0x818cf8,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.45,
-    });
-    const coreWire = new THREE.Mesh(coreGeo, coreWireMat);
-    root.add(coreWire);
-
-    // ----- Data rings (orbits) -----
-    const ringsGroup = new THREE.Group();
-    root.add(ringsGroup);
-
-    const ringConfigs = [
-      { radius: 5.5, color: 0x22d3ee, tiltX: 0.4, tiltY: 0.1, speed: 0.12 },
-      { radius: 6.8, color: 0xa855f7, tiltX: -0.25, tiltY: 0.6, speed: -0.08 },
-      { radius: 8.0, color: 0x38bdf8, tiltX: 0.1, tiltY: -0.4, speed: 0.18 },
+    const panels = [];
+    const panelConfig = [
+      { y: 4, z: -10, width: 14, depth: 4.5, tilt: 0.04 },
+      { y: 0, z: -12, width: 18, depth: 4.2, tilt: 0.08 },
+      { y: -4, z: -14, width: 16, depth: 4.8, tilt: 0.03 },
     ];
 
-    ringConfigs.forEach((cfg) => {
-      const geo = new THREE.TorusGeometry(cfg.radius, 0.07, 16, 220);
-      const mat = new THREE.MeshBasicMaterial({
-        color: cfg.color,
-        transparent: true,
-        opacity: 0.7,
-      });
-      const ring = new THREE.Mesh(geo, mat);
-      ring.rotation.x = cfg.tiltX;
-      ring.rotation.y = cfg.tiltY;
-      ring.userData.speed = cfg.speed;
-      ringsGroup.add(ring);
-    });
-
-    // ----- Nodes + Links (AI network) -----
-    const nodesGroup = new THREE.Group();
-    root.add(nodesGroup);
-
-    const nodeGeo = new THREE.SphereGeometry(0.18, 16, 16);
-    const nodeMat = new THREE.MeshBasicMaterial({
-      color: 0x22d3ee,
-      transparent: true,
-      opacity: 0.95,
-    });
-
-    const nodes = [];
-    const linkPositions = [];
-
-    for (let i = 0; i < 32; i++) {
-      const r = 6 + Math.random() * 3;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.random() * Math.PI;
-
-      const x = r * Math.sin(phi) * Math.cos(theta);
-      const y = r * Math.cos(phi) * 0.7;
-      const z = r * Math.sin(phi) * Math.sin(theta);
-
-      const node = new THREE.Mesh(nodeGeo, nodeMat);
-      node.position.set(x, y, z);
-      node.userData = {
-        baseY: y,
+    panelConfig.forEach((cfg, idx) => {
+      const geo = new THREE.BoxGeometry(cfg.width, 0.18, cfg.depth);
+      const mat = panelMatBase.clone();
+      mat.color = new THREE.Color(idx === 1 ? "#0f172a" : "#020617");
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(0, cfg.y, cfg.z);
+      mesh.rotation.x = -0.25 - cfg.tilt;
+      mesh.userData = {
+        baseY: cfg.y,
         floatOffset: Math.random() * Math.PI * 2,
       };
-      nodesGroup.add(node);
-      nodes.push(node);
-    }
-
-    for (let i = 0; i < nodes.length; i++) {
-      const a = nodes[i].position;
-      const b = nodes[(i + 4) % nodes.length].position;
-      linkPositions.push(a.x, a.y, a.z, b.x, b.y, b.z);
-    }
-
-    const linkGeo = new THREE.BufferGeometry();
-    linkGeo.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(linkPositions, 3)
-    );
-    const linkMat = new THREE.LineBasicMaterial({
-      color: 0x22d3ee,
-      transparent: true,
-      opacity: 0.35,
-    });
-    const links = new THREE.LineSegments(linkGeo, linkMat);
-    nodesGroup.add(links);
-
-    // ----- Particle field (data dust) -----
-    const particlesGeo = new THREE.BufferGeometry();
-    const particleCount = 1000;
-    const particlePos = new Float32Array(particleCount * 3);
-    const particleCol = new Float32Array(particleCount * 3);
-
-    for (let i = 0; i < particleCount; i++) {
-      const i3 = i * 3;
-      const x = (Math.random() - 0.5) * 70;
-      const y = (Math.random() - 0.5) * 40;
-      const z = -Math.random() * 90;
-
-      particlePos[i3] = x;
-      particlePos[i3 + 1] = y;
-      particlePos[i3 + 2] = z;
-
-      const tint = 0.7 + Math.random() * 0.3;
-      particleCol[i3] = 0.35 * tint;
-      particleCol[i3 + 1] = 0.75 * tint;
-      particleCol[i3 + 2] = 1.0 * tint;
-    }
-
-    particlesGeo.setAttribute(
-      "position",
-      new THREE.BufferAttribute(particlePos, 3)
-    );
-    particlesGeo.setAttribute(
-      "color",
-      new THREE.BufferAttribute(particleCol, 3)
-    );
-
-    const particlesMat = new THREE.PointsMaterial({
-      size: 0.07,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.75,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
+      root.add(mesh);
+      panels.push(mesh);
     });
 
-    const particles = new THREE.Points(particlesGeo, particlesMat);
-    scene.add(particles);
+    // Vertical accent "columns"
+    const columnGeo = new THREE.BoxGeometry(0.25, 5, 0.25);
+    const columnMat = new THREE.MeshStandardMaterial({
+      color: 0x111827,
+      metalness: 0.3,
+      roughness: 0.9,
+    });
 
-    // Mouse parallax
+    const columns = [];
+    const colXPositions = [-6, -2, 2, 6];
+    colXPositions.forEach((x) => {
+      const col = new THREE.Mesh(columnGeo, columnMat);
+      col.position.set(x, 2, -10 - Math.random() * 3);
+      root.add(col);
+      columns.push(col);
+    });
+
+    // A subtle accent plane behind hero content, slightly offset
+    const accentGeo = new THREE.PlaneGeometry(16, 9);
+    const accentMat = new THREE.MeshStandardMaterial({
+      color: 0x0b1120,
+      metalness: 0.2,
+      roughness: 0.9,
+      transparent: true,
+      opacity: 0.9,
+    });
+    const accentPlane = new THREE.Mesh(accentGeo, accentMat);
+    accentPlane.position.set(3, 1, -8);
+    accentPlane.rotation.y = -0.25;
+    root.add(accentPlane);
+
+    // Slight mouse-based parallax
     let mouseX = 0;
     let mouseY = 0;
 
@@ -227,7 +149,6 @@ const ThreeBackground = () => {
       mouseX = (e.clientX / window.innerWidth) * 2 - 1;
       mouseY = (e.clientY / window.innerHeight) * 2 - 1;
     };
-
     window.addEventListener("mousemove", handleMouseMove);
 
     const handleResize = () => {
@@ -237,10 +158,9 @@ const ThreeBackground = () => {
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
     };
-
     window.addEventListener("resize", handleResize);
 
-    // Loop
+    // Animation loop
     let frameId;
     const clock = new THREE.Clock();
 
@@ -248,34 +168,25 @@ const ThreeBackground = () => {
       frameId = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      // System rotation
-      root.rotation.y = t * 0.06;
-      root.rotation.x = Math.sin(t * 0.12) * 0.08;
+      // Very gentle global motion
+      root.rotation.y = Math.sin(t * 0.03) * 0.06;
+      root.rotation.x = Math.sin(t * 0.02) * 0.03;
 
-      core.rotation.y += 0.004;
-      core.rotation.x += 0.002;
-      coreWire.rotation.y -= 0.002;
-
-      // Rings
-      ringsGroup.children.forEach((ring) => {
-        const speed = ring.userData.speed || 0.1;
-        ring.rotation.z += speed * 0.01;
+      panels.forEach((panel) => {
+        const { baseY, floatOffset } = panel.userData;
+        panel.position.y =
+          baseY + Math.sin(t * 0.4 + floatOffset) * 0.3;
       });
 
-      // Nodes float
-      nodes.forEach((node) => {
-        const { baseY, floatOffset } = node.userData;
-        node.position.y = baseY + Math.sin(t * 1.2 + floatOffset) * 0.25;
+      columns.forEach((col, idx) => {
+        col.rotation.y = Math.sin(t * 0.2 + idx) * 0.08;
       });
 
-      // Camera parallax
-      const targetX = mouseX * 2.4;
-      const targetY = mouseY * 1.6;
+      const targetX = mouseX * 1.8;
+      const targetY = mouseY * 1.2;
       camera.position.x += (targetX - camera.position.x) * 0.04;
       camera.position.y += (targetY - camera.position.y) * 0.04;
-      camera.lookAt(0, 0, 0);
-
-      particles.rotation.z = t * 0.02;
+      camera.lookAt(0, 0, -10);
 
       renderer.render(scene, camera);
     };
@@ -292,15 +203,13 @@ const ThreeBackground = () => {
         container.removeChild(renderer.domElement);
       }
 
-      coreGeo.dispose();
-      coreMat.dispose();
-      coreWireMat.dispose();
-      linkGeo.dispose();
-      linkMat.dispose();
-      nodeGeo.dispose();
-      nodeMat.dispose();
-      particlesGeo.dispose();
-      particlesMat.dispose();
+      panelConfig.forEach(() => {
+        // geometries/materials already shared above; safely dispose in bulk
+      });
+      accentGeo.dispose();
+      accentMat.dispose();
+      columnGeo.dispose();
+      columnMat.dispose();
       renderer.dispose();
     };
   }, []);
@@ -311,11 +220,11 @@ const ThreeBackground = () => {
 };
 
 // -------------
-// Small helpers
+// Helpers
 // -------------
 const Reveal = ({ children, delay = 0, className = "" }) => (
   <motion.div
-    initial={{ opacity: 0, y: 32 }}
+    initial={{ opacity: 0, y: 24 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ ...SMOOTH_TRANSITION, delay }}
     className={className}
@@ -348,10 +257,10 @@ const Navbar = () => {
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <a href="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-            <span className="text-white font-bold text-lg">T</span>
+          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <span className="text-white font-semibold text-lg">T</span>
           </div>
-          <span className="font-semibold text-sm tracking-[0.18em] uppercase text-gray-200 group-hover:text-white">
+          <span className="font-medium text-sm tracking-[0.18em] uppercase text-gray-200 group-hover:text-white">
             TVL Studios
           </span>
         </a>
@@ -372,7 +281,7 @@ const Navbar = () => {
           </a>
           <button
             onClick={() => (window.location.href = "/start-project")}
-            className="ml-4 px-4 py-2 rounded-full bg-white text-black text-xs font-semibold hover:bg-gray-100 transition-all shadow-md shadow-indigo-500/20"
+            className="ml-4 px-4 py-2 rounded-full bg-white text-black text-xs font-semibold hover:bg-gray-100 transition-all shadow-md shadow-indigo-500/10"
           >
             Start a project
           </button>
@@ -422,13 +331,12 @@ const Navbar = () => {
 export default function App() {
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* 3D AI background */}
+      {/* 3D background */}
       <ThreeBackground />
 
-      {/* Subtle dark overlay so content is readable */}
-      <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 z-0" />
+      {/* Soft overlay for readability */}
+      <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/85 z-0" />
 
-      {/* Foreground content */}
       <div className="relative z-10">
         <Navbar />
 
@@ -440,24 +348,24 @@ export default function App() {
               <Reveal delay={0.05}>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] uppercase tracking-[0.2em] text-gray-300 mb-5">
                   <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                  <span>AI-native creative studio</span>
+                  <span>AI-aware design & web studio</span>
                 </div>
               </Reveal>
 
               <Reveal delay={0.1}>
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-4">
-                  Design, web, and content
-                  <span className="block bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-sky-300 to-purple-300 mt-1">
-                    built around intelligent systems.
+                  Digital experiences that
+                  <span className="block text-slate-100 mt-1">
+                    feel considered, not complicated.
                   </span>
                 </h1>
               </Reveal>
 
               <Reveal delay={0.16}>
                 <p className="text-sm md:text-base text-gray-300 max-w-xl mb-6">
-                  TVL Studios blends product design, AI workflows, and motion
-                  visuals to help brands ship sharper websites, campaigns, and
-                  digital experiences—without feeling like templates.
+                  TVL Studios helps teams ship clear, modern websites and brand
+                  systems with a calm, product-focused feel. Less noise, more
+                  clarity—guided by AI where it actually helps.
                 </p>
               </Reveal>
 
@@ -465,7 +373,7 @@ export default function App() {
                 <div className="flex flex-wrap items-center gap-3 mb-6">
                   <button
                     onClick={() => (window.location.href = "/start-project")}
-                    className="px-5 py-2.5 rounded-full bg-white text-black text-xs md:text-sm font-semibold flex items-center gap-1.5 hover:bg-gray-100 hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-md shadow-indigo-500/30"
+                    className="px-5 py-2.5 rounded-full bg-white text-black text-xs md:text-sm font-semibold flex items-center gap-1.5 hover:bg-gray-100 hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-md shadow-slate-900/50"
                   >
                     Start a project
                     <ArrowRight className="w-4 h-4" />
@@ -487,90 +395,80 @@ export default function App() {
                 <div className="flex flex-wrap items-center gap-4 text-[11px] text-gray-400">
                   <div className="flex items-center gap-2">
                     <Cpu className="w-3.5 h-3.5 text-indigo-300" />
-                    <span>AI-first workflows</span>
+                    <span>Product & marketing sites</span>
                   </div>
                   <span className="w-px h-3 bg-white/20 hidden sm:inline-block" />
                   <div className="flex items-center gap-2">
                     <Globe className="w-3.5 h-3.5 text-indigo-300" />
-                    <span>Remote, web-native delivery</span>
+                    <span>Remote, async-friendly collaboration</span>
                   </div>
                 </div>
               </Reveal>
             </div>
 
-            {/* Right: “stack” card like AGPT style */}
+            {/* Right: simple “stack” card */}
             <div className="flex-1 max-w-md w-full">
-              <Reveal delay={0.18}>
-                <div className="relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl px-5 py-6 shadow-[0_24px_80px_rgba(15,23,42,0.9)]">
-                  <div className="absolute -top-8 right-6 px-3 py-1 rounded-full bg-emerald-400/10 border border-emerald-400/30 text-[11px] text-emerald-300 uppercase tracking-[0.18em]">
-                    In beta with early teams
-                  </div>
-
-                  <div className="mb-5">
+              <Reveal delay={0.15}>
+                <div className="relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl px-5 py-6 shadow-[0_24px_60px_rgba(15,23,42,0.9)]">
+                  <div className="mb-4">
                     <p className="text-[11px] text-gray-400 uppercase tracking-[0.2em] mb-1">
-                      Output preview
+                      How we show up
                     </p>
                     <h2 className="text-sm font-medium text-white">
-                      A unified layer for brand, product and content.
+                      One studio for design, web and content.
                     </h2>
                   </div>
 
                   <div className="space-y-3 text-xs">
-                    <div className="flex items-center justify-between rounded-2xl bg-black/50 border border-white/10 px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded-xl bg-indigo-500/20 flex items-center justify-center">
-                          <MonitorPlay className="w-4 h-4 text-indigo-200" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-white text-xs">
-                            Launch-ready websites
-                          </p>
-                          <p className="text-[11px] text-gray-400">
-                            Built in Next.js with motion baked in.
-                          </p>
-                        </div>
-                      </div>
-                      <span className="text-[11px] text-emerald-400">
-                        Live
-                      </span>
-                    </div>
-
                     <div className="flex items-center justify-between rounded-2xl bg-black/40 border border-white/10 px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded-xl bg-sky-500/15 flex items-center justify-center">
-                          <Aperture className="w-4 h-4 text-sky-200" />
+                        <div className="w-7 h-7 rounded-xl bg-slate-800 flex items-center justify-center">
+                          <MonitorPlay className="w-4 h-4 text-slate-100" />
                         </div>
                         <div>
                           <p className="font-medium text-white text-xs">
-                            AI-assisted creative
+                            Websites & product pages
                           </p>
                           <p className="text-[11px] text-gray-400">
-                            Concepts, variations, copy, and visuals.
+                            Modern UI, responsive layouts, motion where it
+                            matters.
                           </p>
                         </div>
                       </div>
-                      <span className="text-[11px] text-gray-400">
-                        Studio layer
-                      </span>
                     </div>
 
-                    <div className="flex items-center justify-between rounded-2xl bg-black/40 border border-white/10 px-4 py-3">
+                    <div className="flex items-center justify-between rounded-2xl bg-black/35 border border-white/10 px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded-xl bg-purple-500/15 flex items-center justify-center">
-                          <Zap className="w-4 h-4 text-purple-200" />
+                        <div className="w-7 h-7 rounded-xl bg-slate-800 flex items-center justify-center">
+                          <Cpu className="w-4 h-4 text-slate-100" />
                         </div>
                         <div>
                           <p className="font-medium text-white text-xs">
-                            Systems & automation
+                            AI-aware workflows
                           </p>
                           <p className="text-[11px] text-gray-400">
-                            Reusable components, tokens and flows.
+                            Content and design systems built to work with AI,
+                            not fight it.
                           </p>
                         </div>
                       </div>
-                      <span className="text-[11px] text-gray-400">
-                        Optional
-                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between rounded-2xl bg-black/30 border border-white/10 px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-7 h-7 rounded-xl bg-slate-800 flex items-center justify-center">
+                          <Aperture className="w-4 h-4 text-slate-100" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-white text-xs">
+                            Visual identity
+                          </p>
+                          <p className="text-[11px] text-gray-400">
+                            Type, color, graphics and components that are easy
+                            to keep consistent.
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -579,7 +477,7 @@ export default function App() {
           </section>
         </main>
 
-        {/* ABOUT / STUDIO */}
+        {/* ABOUT */}
         <section
           id="about"
           className="max-w-6xl mx-auto px-4 py-14 border-t border-white/10"
@@ -587,43 +485,41 @@ export default function App() {
           <Reveal>
             <div className="flex flex-col md:flex-row gap-10 items-start">
               <div className="md:w-1/2">
-                <p className="text-[11px] uppercase tracking-[0.2em] text-indigo-300 mb-3">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-slate-300 mb-3">
                   Studio
                 </p>
                 <h2 className="text-xl md:text-2xl font-semibold mb-3">
-                  A small team building for the AI era of the web.
+                  Focused, small team. Wide set of skills.
                 </h2>
                 <p className="text-sm text-gray-300">
-                  TVL Studios sits somewhere between a design studio, a dev
-                  shop, and a content team. We help founders and teams launch
-                  products, campaigns and brands that feel considered, not
-                  generic.
+                  We operate like an embedded in-house team for a limited number
+                  of clients at a time. Strategy, UX, UI, implementation and
+                  content all stay in one place, instead of being split across
+                  different vendors.
                 </p>
               </div>
               <div className="md:w-1/2 grid grid-cols-2 gap-4 text-xs text-gray-300">
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                   <p className="text-[11px] text-gray-400 mb-1">
-                    What we combine
+                    What we cover
                   </p>
-                  <p>Product design, web development, brand, motion and AI.</p>
+                  <p>Product, marketing, brand, and simple internal tools.</p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                   <p className="text-[11px] text-gray-400 mb-1">
-                    Who we&apos;re for
+                    Ideal projects
                   </p>
-                  <p>Early teams, solo founders and creative businesses.</p>
+                  <p>New product launches, redesigns, or first-time brand work.</p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                   <p className="text-[11px] text-gray-400 mb-1">
-                    How we work
+                    Collaboration
                   </p>
-                  <p>Clear timelines, async updates and one shared workspace.</p>
+                  <p>Clear owners, fast feedback, no endless cycles.</p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-[11px] text-gray-400 mb-1">
-                    Locations
-                  </p>
-                  <p>Remote-first, collaborating with clients across time zones.</p>
+                  <p className="text-[11px] text-gray-400 mb-1">Stack</p>
+                  <p>Figma, Next.js, Tailwind, motion, and AI support tools.</p>
                 </div>
               </div>
             </div>
@@ -638,16 +534,16 @@ export default function App() {
           <Reveal>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.2em] text-indigo-300 mb-2">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-slate-300 mb-2">
                   Services
                 </p>
                 <h2 className="text-xl md:text-2xl font-semibold">
-                  Everything you need to launch or refresh.
+                  From zero to shipped, or somewhere in between.
                 </h2>
               </div>
               <p className="text-xs text-gray-400 md:max-w-xs">
-                We plug in as your design and build team, or collaborate with
-                in-house teams that need a focused push.
+                We can own the whole path—structure, visuals, build—or partner
+                with your in-house team for specific slices of the work.
               </p>
             </div>
           </Reveal>
@@ -656,19 +552,19 @@ export default function App() {
             <Reveal delay={0.05}>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5 h-full flex flex-col justify-between">
                 <div>
-                  <div className="w-8 h-8 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-3">
-                    <MonitorPlay className="w-4 h-4 text-indigo-300" />
+                  <div className="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center mb-3">
+                    <MonitorPlay className="w-4 h-4 text-slate-100" />
                   </div>
                   <h3 className="font-semibold mb-2 text-white">
                     Websites & product pages
                   </h3>
                   <p className="text-gray-300 text-xs">
-                    Marketing sites, launch pages and multi-section experiences
-                    with motion and responsiveness baked in.
+                    Marketing sites, detail pages and flows that feel simple to
+                    navigate and easy to extend.
                   </p>
                 </div>
                 <p className="text-[11px] text-gray-500 mt-4">
-                  Tech: Next.js, Tailwind, Framer Motion
+                  Tech: Next.js, React, Tailwind, motion
                 </p>
               </div>
             </Reveal>
@@ -676,20 +572,19 @@ export default function App() {
             <Reveal delay={0.1}>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5 h-full flex flex-col justify-between">
                 <div>
-                  <div className="w-8 h-8 rounded-xl bg-purple-500/20 flex items-center justify-center mb-3">
-                    <Cpu className="w-4 h-4 text-purple-200" />
+                  <div className="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center mb-3">
+                    <Cpu className="w-4 h-4 text-slate-100" />
                   </div>
                   <h3 className="font-semibold mb-2 text-white">
-                    AI-assisted creative systems
+                    AI-aware content & systems
                   </h3>
                   <p className="text-gray-300 text-xs">
-                    Content templates, prompts, and structures that let you
-                    ship consistently across platforms without starting from
-                    zero every time.
+                    Content structures, prompts and templates that help your
+                    team produce on-brand work faster.
                   </p>
                 </div>
                 <p className="text-[11px] text-gray-500 mt-4">
-                  Output: decks, docs, social kits, landing flows
+                  Output: docs, templates, messaging frameworks
                 </p>
               </div>
             </Reveal>
@@ -697,19 +592,19 @@ export default function App() {
             <Reveal delay={0.15}>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5 h-full flex flex-col justify-between">
                 <div>
-                  <div className="w-8 h-8 rounded-xl bg-sky-500/20 flex items-center justify-center mb-3">
-                    <Aperture className="w-4 h-4 text-sky-200" />
+                  <div className="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center mb-3">
+                    <Aperture className="w-4 h-4 text-slate-100" />
                   </div>
                   <h3 className="font-semibold mb-2 text-white">
                     Visual identity & graphics
                   </h3>
                   <p className="text-gray-300 text-xs">
-                    Logo directions, typography, color, and on-brand visuals
-                    for sites, decks, campaigns and social.
+                    Identity foundations, key visuals and simple systems for
+                    product, web and decks.
                   </p>
                 </div>
                 <p className="text-[11px] text-gray-500 mt-4">
-                  Tools: Figma, Adobe, motion toolchain
+                  Tools: Figma, Adobe, motion tools
                 </p>
               </div>
             </Reveal>
@@ -724,16 +619,16 @@ export default function App() {
           <Reveal>
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.2em] text-indigo-300 mb-2">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-slate-300 mb-2">
                   Process
                 </p>
                 <h2 className="text-xl md:text-2xl font-semibold">
-                  Clear steps, no mystery.
+                  Clear phases, so you always know where we are.
                 </h2>
               </div>
               <p className="text-xs text-gray-400 md:max-w-sm">
-                We keep the number of things happening at once low so projects
-                move forward quickly and calmly.
+                We focus on momentum and clarity. Fewer surprises, fewer
+                revisions, more steady progress.
               </p>
             </div>
           </Reveal>
@@ -743,11 +638,11 @@ export default function App() {
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <p className="text-[11px] text-gray-500 mb-1">01</p>
                 <h3 className="font-semibold text-white mb-2">
-                  Discovery & alignment
+                  Discover & define
                 </h3>
                 <p className="text-xs text-gray-300">
-                  A short call + shared doc to define scope, constraints,
-                  priorities and success metrics.
+                  Short intake, a call if helpful, and a concise doc capturing
+                  goals, constraints and scope.
                 </p>
               </div>
             </Reveal>
@@ -755,11 +650,11 @@ export default function App() {
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <p className="text-[11px] text-gray-500 mb-1">02</p>
                 <h3 className="font-semibold text-white mb-2">
-                  Design, build & refine
+                  Design & build
                 </h3>
                 <p className="text-xs text-gray-300">
-                  We ship in small chunks: structure, visuals, content, then
-                  polish with async feedback.
+                  We explore, narrow, then build. You see work in context, not
+                  just isolated screens.
                 </p>
               </div>
             </Reveal>
@@ -767,18 +662,18 @@ export default function App() {
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <p className="text-[11px] text-gray-500 mb-1">03</p>
                 <h3 className="font-semibold text-white mb-2">
-                  Launch & handoff
+                  Launch & support
                 </h3>
                 <p className="text-xs text-gray-300">
-                  Final implementation, documentation, and a clear way to
-                  extend or return for follow-on work.
+                  Implementation, QA and documentation, plus optional support
+                  for future iterations.
                 </p>
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* WORK (placeholder style, you can plug your real cases) */}
+        {/* WORK (simple, can be extended later) */}
         <section
           id="work"
           className="max-w-6xl mx-auto px-4 py-16 border-t border-white/10"
@@ -786,16 +681,16 @@ export default function App() {
           <Reveal>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.2em] text-indigo-300 mb-2">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-slate-300 mb-2">
                   Work
                 </p>
                 <h2 className="text-xl md:text-2xl font-semibold">
-                  Early explorations & client work.
+                  Early examples & client collaborations.
                 </h2>
               </div>
               <p className="text-xs text-gray-400 md:max-w-xs">
-                This section can highlight Open Word War, Jibhi Homestead
-                Cabins, or any new projects you launch.
+                This is where we&apos;ll highlight project stories—Open Word War,
+                Jibhi Homestead Cabins, and future launches.
               </p>
             </div>
           </Reveal>
@@ -803,15 +698,15 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
             <Reveal delay={0.05}>
               <div className="rounded-3xl border border-white/10 bg-white/5 overflow-hidden flex flex-col">
-                <div className="h-40 bg-gradient-to-br from-indigo-500/40 via-slate-900 to-purple-500/40" />
+                <div className="h-40 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950" />
                 <div className="p-5">
                   <p className="text-[11px] text-gray-500 mb-1">Concept</p>
                   <h3 className="font-semibold text-white">
-                    Launch microsite for an AI product
+                    Launch site for an AI product
                   </h3>
                   <p className="mt-2 text-xs text-gray-300">
-                    A focused story for a new AI tool with a clear scroll, CTA
-                    and motion that feels alive.
+                    A calm, focused marketing site with clear messaging, strong
+                    hierarchy and a direct primary action.
                   </p>
                 </div>
               </div>
@@ -819,15 +714,15 @@ export default function App() {
 
             <Reveal delay={0.1}>
               <div className="rounded-3xl border border-white/10 bg-white/5 overflow-hidden flex flex-col">
-                <div className="h-40 bg-gradient-to-br from-emerald-500/40 via-slate-900 to-sky-500/40" />
+                <div className="h-40 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900" />
                 <div className="p-5">
                   <p className="text-[11px] text-gray-500 mb-1">Client</p>
                   <h3 className="font-semibold text-white">
-                    Visual system for a homestay brand
+                    Visual system for a hospitality brand
                   </h3>
                   <p className="mt-2 text-xs text-gray-300">
-                    Graphics, layouts and site structure for a stay that feels
-                    calm, not noisy.
+                    Graphics, layout and web structure for a stay that feels
+                    understated and welcoming.
                   </p>
                 </div>
               </div>
@@ -841,17 +736,17 @@ export default function App() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
               <div>
                 <h2 className="text-lg md:text-xl font-semibold mb-2">
-                  Have a launch, site or idea in mind?
+                  Have something coming up?
                 </h2>
                 <p className="text-xs text-gray-400 max-w-md">
-                  Share a short brief—links, goals, timing—and we&apos;ll come back
-                  with fit, next steps and questions.
+                  Share a rough outline—timeline, context, links. We&apos;ll
+                  respond with fit and next steps, usually within a day or two.
                 </p>
               </div>
               <div className="flex flex-col items-start md:items-end gap-2 text-xs text-gray-300">
                 <button
                   onClick={() => (window.location.href = "/start-project")}
-                  className="px-5 py-2.5 rounded-full bg-white text-black font-semibold hover:bg-gray-100 transition-all shadow-md shadow-indigo-500/30"
+                  className="px-5 py-2.5 rounded-full bg-white text-black font-semibold hover:bg-gray-100 transition-all shadow-md shadow-slate-900/40"
                 >
                   Start a project
                 </button>
@@ -864,8 +759,8 @@ export default function App() {
 
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-[11px] text-gray-500 border-t border-white/10 pt-4">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">T</span>
+                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center">
+                  <span className="text-white text-sm font-semibold">T</span>
                 </div>
                 <span>© 2026 TVL Studios.</span>
               </div>
