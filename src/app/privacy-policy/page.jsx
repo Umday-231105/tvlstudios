@@ -144,10 +144,9 @@ export default function PrivacyPolicyPage() {
     >
       {/* Light Mode Background */}
       {theme !== "dark" && (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-neutral-50 to-amber-50/40 pointer-events-none" />
-        </>
-      )}
+  <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-neutral-50 to-amber-50/40 pointer-events-none z-0" />
+)}
+
 
       {/* Dark Mode Background (same as homepage) */}
       {theme === "dark" && (
