@@ -29,34 +29,28 @@ const Navbar = () => {
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-
-        {/* Logo */}
         <a href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-200 via-amber-100 to-lime-100 
-              dark:from-emerald-500/40 dark:via-amber-400/30 dark:to-lime-400/40 
-              flex items-center justify-center shadow-md border border-white/80 dark:border-neutral-800">
+          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-200 via-amber-100 to-lime-100 dark:from-emerald-500/40 dark:via-amber-400/30 dark:to-lime-400/40 flex items-center justify-center shadow-md border border-white/80 dark:border-neutral-800">
             <span className="text-neutral-900 dark:text-neutral-900 font-semibold text-lg">T</span>
           </div>
 
-          <span className="font-medium text-sm tracking-[0.18em] uppercase text-neutral-700 
-            group-hover:text-neutral-900 dark:text-neutral-300 dark:group-hover:text-white transition">
+          <span className="font-medium text-sm tracking-[0.18em] uppercase text-neutral-700 group-hover:text-neutral-900 dark:text-neutral-300 dark:group-hover:text-white transition">
             TVL Studios
           </span>
         </a>
 
-        {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-5 text-xs text-neutral-600 dark:text-neutral-300">
-          <a href="/" className="hover:text-neutral-900 dark:hover:text-white transition">Home</a>
+          <a href="/" className="hover:text-neutral-900 dark:hover:text-white transition">
+            Home
+          </a>
           <button
             onClick={() => (window.location.href = "/start-project")}
-            className="px-4 py-2 rounded-full bg-neutral-900 text-neutral-50 text-xs font-semibold 
-              hover:bg-neutral-800 transition dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white"
+            className="px-4 py-2 rounded-full bg-neutral-900 text-neutral-50 text-xs font-semibold hover:bg-neutral-800 transition dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white"
           >
             Start a project
           </button>
         </div>
 
-        {/* Mobile */}
         <button
           onClick={() => setMobileMenuOpen((v) => !v)}
           className="md:hidden text-neutral-700 dark:text-neutral-100"
@@ -69,6 +63,7 @@ const Navbar = () => {
         <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl">
           <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-3 text-sm text-neutral-800 dark:text-neutral-100">
             <a href="/" onClick={() => setMobileMenuOpen(false)}>Home</a>
+
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
@@ -90,27 +85,26 @@ const Footer = () => {
   const { theme } = useTheme();
 
   return (
-    <footer className="w-full border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 py-10">
+    <footer className="w-full border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 py-10 relative z-10">
       <div className="max-w-6xl mx-auto px-6">
-
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
           <div>
             <h2 className="text-lg md:text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-50">
               Have something coming up?
             </h2>
             <p className="text-xs text-neutral-600 dark:text-neutral-300 max-w-md">
-              Share your idea, timeline and goals — we’ll get back with clear next steps.
+              Share your idea, timeline, and goals — we’ll get back with clear next steps.
             </p>
           </div>
 
           <div className="flex flex-col items-start md:items-end gap-2 text-xs text-neutral-700 dark:text-neutral-200">
             <button
               onClick={() => (window.location.href = "/start-project")}
-              className="px-5 py-2.5 rounded-full bg-neutral-900 text-neutral-50 font-semibold hover:bg-neutral-800 
-                dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white"
+              className="px-5 py-2.5 rounded-full bg-neutral-900 text-neutral-50 font-semibold hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white"
             >
               Start a project
             </button>
+
             <span className="flex items-center gap-2 text-neutral-500 dark:text-neutral-400">
               <strong>Email:</strong> tvlstudioz@gmail.com
             </span>
@@ -124,7 +118,6 @@ const Footer = () => {
             <a href="/terms-of-service" className="hover:text-neutral-800 dark:hover:text-neutral-200">Terms of Service</a>
           </div>
         </div>
-
       </div>
     </footer>
   );
@@ -137,28 +130,25 @@ export default function PrivacyPolicyPage() {
   return (
     <div
       className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${
-        theme === "dark"
-          ? "bg-neutral-900 text-neutral-50"
-          : "bg-neutral-50 text-neutral-900"
+        theme === "dark" ? "bg-neutral-900 text-neutral-50" : "bg-neutral-50 text-neutral-900"
       }`}
     >
-      {/* Light Mode Background */}
+      {/* ---------- BACKGROUNDS (correct z-index so footer shows) ---------- */}
       {theme !== "dark" && (
-  <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-neutral-50 to-amber-50/40 pointer-events-none z-0" />
-)}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-neutral-50 to-emerald-50/40 pointer-events-none z-0" />
+      )}
 
-
-      {/* Dark Mode Background (same as homepage) */}
       {theme === "dark" && (
         <>
-          <div className="absolute inset-0 bg-neutral-900" />
-          <div className="absolute inset-0 bg-gradient-to-b from-neutral-900 via-neutral-900 to-neutral-900 opacity-80" />
+          <div className="absolute inset-0 bg-neutral-900 z-0" />
+          <div className="absolute inset-0 bg-gradient-to-b from-neutral-900 via-neutral-900 to-neutral-900 opacity-80 z-0" />
         </>
       )}
 
+      {/* Navbar */}
       <Navbar />
 
-      {/* Content */}
+      {/* Main content */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-32">
         <div className="rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white/70 dark:bg-neutral-900/80 backdrop-blur-2xl p-10 shadow-lg">
 
@@ -168,54 +158,64 @@ export default function PrivacyPolicyPage() {
           </p>
 
           <div className="space-y-6 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-
             <p>
-              At <strong>TVL Studios</strong>, we are committed to protecting your privacy and ensuring your data is handled responsibly.
+              At <strong>TVL Studios</strong>, we are committed to protecting your privacy and ensuring that your information is handled responsibly.
             </p>
 
             <p>
-              TVL Studios was founded by <strong>Uday Sood</strong> and <strong>Vishal Baibhav Panda</strong>, with <strong>Arnav Verma</strong> as Co‑Founder.
+              TVL Studios is founded by <strong>Uday Sood</strong> and <strong>Vishal Baibhav Panda</strong>, with <strong>Arnav Verma</strong> serving as Co‑Founder.
             </p>
 
             <h2 className="text-xl font-semibold mt-10">1. Information We Collect</h2>
             <ul className="list-disc ml-6 space-y-2">
-              <li>Personal Information</li>
-              <li>Usage Data</li>
-              <li>Cookies & tracking data</li>
+              <li>Personal Information (name, email, phone number, company, project details)</li>
+              <li>Usage Data (IP, browser info, pages viewed, time spent, etc.)</li>
+              <li>Cookies and tracking data</li>
             </ul>
 
             <h2 className="text-xl font-semibold mt-10">2. How We Use Your Information</h2>
             <ul className="list-disc ml-6 space-y-2">
-              <li>Respond to inquiries</li>
-              <li>Improve our services</li>
-              <li>Communication (optional opt‑in)</li>
+              <li>To communicate with you</li>
+              <li>To understand requirements and provide services</li>
+              <li>To improve website performance</li>
+              <li>To send updates only if you opt‑in</li>
             </ul>
 
-            <h2 className="text-xl font-semibold mt-10">3. Sharing Information</h2>
+            <h2 className="text-xl font-semibold mt-10">3. Sharing of Information</h2>
             <p>
-              We do <strong>not</strong> sell or trade your data. We share only with trusted service providers when necessary.
+              We do <strong>not</strong> sell or trade your data. We only share it with trusted tools or when required by law.
             </p>
 
             <h2 className="text-xl font-semibold mt-10">4. Data Security</h2>
             <p>
-              We use secure systems but cannot guarantee 100% security of internet transmission.
+              We use industry‑standard security, though no method is 100% secure.
             </p>
 
             <h2 className="text-xl font-semibold mt-10">5. Your Rights</h2>
-
             <ul className="list-disc ml-6 space-y-2">
               <li>Access your data</li>
-              <li>Correct data</li>
+              <li>Request corrections</li>
               <li>Request deletion</li>
+              <li>Withdraw marketing consent</li>
             </ul>
 
-            <h2 className="text-xl font-semibold mt-10">6. Contact Us</h2>
-            <p>Email: <strong>tvlstudioz@gmail.com</strong></p>
+            <h2 className="text-xl font-semibold mt-10">6. Children’s Privacy</h2>
+            <p>We do not knowingly collect information from children under 13.</p>
 
+            <h2 className="text-xl font-semibold mt-10">7. Changes to This Policy</h2>
+            <p>We may update this page occasionally.</p>
+
+            <h2 className="text-xl font-semibold mt-10">8. Contact Us</h2>
+            <p>
+              Email: <strong>tvlstudioz@gmail.com</strong> <br />
+              Founders: Uday Sood & Vishal Baibhav Panda <br />
+              Co‑Founder: Arnav Verma
+            </p>
           </div>
         </div>
       </div>
 
+      {/* Footer */}
       <Footer />
     </div>
   );
