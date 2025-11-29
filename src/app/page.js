@@ -16,6 +16,26 @@ import {
   Mail,
 } from "lucide-react";
 import * as THREE from "three";
+import { Sun, Moon } from "lucide-react";
+
+// ======= THEME HOOK (ADD THIS EXACTLY HERE) =======
+function useTheme() {
+  const [theme, setTheme] = React.useState("light");
+
+  React.useEffect(() => {
+    const saved = localStorage.getItem("tvl-theme");
+    if (saved) setTheme(saved);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "light" ? "dark" : "light";
+    setTheme(next);
+    localStorage.setItem("tvl-theme", next);
+  };
+
+  return { theme, toggleTheme };
+}
+
 
 // ----------------------
 // Smooth animation curve
