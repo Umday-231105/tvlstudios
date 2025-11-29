@@ -217,25 +217,37 @@ const Footer = () => {
 };
 /* -------------------- PAGE CONTENT -------------------- */
 export default function PrivacyPolicyPage() {
+  const { theme } = useTheme();
+
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+    <div
+      className={`min-h-screen relative overflow-hidden transition-colors duration-300 ${
+        theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+      }`}
+    >
       {/* Background Glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-purple-900/20 blur-[90px]" />
+      {theme === "dark" ? (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-purple-900/20 blur-[90px]" />
+          <div className="absolute top-20 left-10 w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-20 right-10 w-80 h-80 bg-purple-600/20 rounded-full blur-[120px] animate-pulse" />
+        </>
+      ) : null}
 
-      {/* Floating Orbs */}
-      <div className="absolute top-20 left-10 w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px] animate-pulse" />
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-purple-600/20 rounded-full blur-[120px] animate-pulse" />
-
-      {/* Navbar */}
       <Navbar />
 
       {/* Privacy Policy Content */}
-      <div className="relative z-10 container mx-auto px-6 py-28">
+     <div className="relative z-10 container mx-auto px-6 py-28">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold mb-4">Privacy Policy</h1>
-          <p className="text-gray-400 mb-10">Last Updated: 28th November 2025 </p>
-
-          <div className="space-y-6 text-gray-300 leading-relaxed">
+          <p className={theme === "dark" ? "text-gray-400 mb-10" : "text-gray-600 mb-10"}>
+            Last Updated: 28th November 2025
+          </p>
+           <div
+            className={`space-y-6 leading-relaxed ${
+              theme === "dark" ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
             <p>
               At <strong>TVL Studios</strong>, we are committed to protecting your
               privacy and ensuring that your personal information is handled
