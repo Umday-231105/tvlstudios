@@ -1,17 +1,19 @@
-import './globals.css'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import "./globals.css";
+import ThemeProvider from "./ThemeProvider";
 
 export const metadata = {
-  title: 'TVL Studios',
-  description: 'Future-proof digital experiences',
-}
+  title: "Your Website",
+  description: "Your description",
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
-  )
+  );
 }
