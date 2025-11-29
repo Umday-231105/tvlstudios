@@ -2,15 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  background: #000;
-  color: #fff;
-}
+/* remove forcing a global dark theme.
+   Use Tailwind's utilities and the `.dark` class to control visuals.
+*/
 
 html {
   scroll-behavior: smooth;
 }
 
+/* If you want a default light background globally you can keep this,
+   otherwise the page-level Tailwind classes will handle background.
+*/
 body {
   overflow-x: hidden;
+  /* leave layout backgrounds to Tailwind classes used in page.js */
 }
