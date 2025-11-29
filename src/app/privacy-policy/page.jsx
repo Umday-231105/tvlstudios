@@ -1,11 +1,14 @@
-'use client';
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
+import { useTheme } from "../ThemeProvider";
 
 /* -------------------- NAVBAR -------------------- */
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -17,17 +20,31 @@ const Navbar = () => {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-black/80 backdrop-blur-xl border-b border-white/5 py-4"
+          ? theme === "dark"
+            ? "bg-black/80 backdrop-blur-xl border-b border-white/5 py-4"
+            : "bg-white/80 backdrop-blur-xl border-b border-neutral-200 py-4"
+          : theme === "dark"
+          ? "bg-transparent py-8"
           : "bg-transparent py-8"
       }`}
     >
       <div className="container mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
         <a href="/" className="flex items-center gap-3 cursor-pointer group">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:shadow-indigo-500/50 transition-all duration-300">
+          <div
+            className={`w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-300 ${
+              theme === "dark"
+                ? "bg-gradient-to-br from-indigo-500 to-purple-500 shadow-indigo-500/30"
+                : "bg-gradient-to-br from-indigo-600 to-purple-600 shadow-purple-300/40"
+            }`}
+          >
             <span className="text-white font-bold text-xl">T</span>
           </div>
-          <span className="text-xl font-bold tracking-tight group-hover:text-indigo-300 transition-colors duration-300">
+          <span
+            className={`text-xl font-bold tracking-tight transition-colors duration-300 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
             TVL STUDIOS
           </span>
         </a>
@@ -36,13 +53,22 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-8">
           <a
             href="/"
-            className="text-sm text-gray-300 hover:text-white transition-colors duration-200"
+            className={`text-sm transition-colors duration-200 ${
+              theme === "dark"
+                ? "text-gray-300 hover:text-white"
+                : "text-gray-700 hover:text-black"
+            }`}
           >
             Home
           </a>
+
           <a
             href="/start-project"
-            className="text-sm text-white px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-200"
+            className={`text-sm px-4 py-2 rounded-full border transition-all duration-200 ${
+              theme === "dark"
+                ? "text-white border-white/10 bg-white/5 hover:bg-white/10"
+                : "text-black border-black/10 bg-black/5 hover:bg-black/10"
+            }`}
           >
             Start a Project
           </a>
@@ -50,27 +76,50 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 rounded-full border border-white/10 bg-white/5"
+          className={`md:hidden p-2 rounded-full border ${
+            theme === "dark"
+              ? "border-white/10 bg-white/5"
+              : "border-black/10 bg-black/5"
+          }`}
           onClick={() => setMobileMenuOpen((prev) => !prev)}
         >
-          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          {mobileMenuOpen ? (
+            <X size={20} className={theme === "dark" ? "text-white" : "text-black"} />
+          ) : (
+            <Menu size={20} className={theme === "dark" ? "text-white" : "text-black"} />
+          )}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden mt-3 px-6">
-          <div className="bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex flex-col gap-3">
+          <div
+            className={`rounded-2xl p-4 flex flex-col gap-3 border backdrop-blur-xl ${
+              theme === "dark"
+                ? "bg-black/80 border-white/10"
+                : "bg-white/80 border-black/10"
+            }`}
+          >
             <a
               href="/"
-              className="text-sm text-gray-300 hover:text-white transition-colors duration-200"
+              className={`text-sm transition-colors ${
+                theme === "dark"
+                  ? "text-gray-300 hover:text-white"
+                  : "text-gray-700 hover:text-black"
+              }`}
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
             </a>
+
             <a
               href="/start-project"
-              className="text-sm text-white px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-200 text-center"
+              className={`text-sm px-4 py-2 rounded-full border transition-all duration-200 text-center ${
+                theme === "dark"
+                  ? "text-white border-white/10 bg-white/5 hover:bg-white/10"
+                  : "text-black border-black/10 bg-black/5 hover:bg-black/10"
+              }`}
               onClick={() => setMobileMenuOpen(false)}
             >
               Start a Project
@@ -84,46 +133,80 @@ const Navbar = () => {
 
 /* -------------------- FOOTER -------------------- */
 const Footer = () => {
+  const { theme } = useTheme();
+
   return (
-    <footer className="bg-black pt-24 pb-12 border-t border-white/10 relative overflow-hidden mt-24">
+    <footer
+      className={`pt-24 pb-12 border-t relative overflow-hidden mt-24 ${
+        theme === "dark"
+          ? "bg-black border-white/10"
+          : "bg-white border-black/10"
+      }`}
+    >
       {/* Glow Background */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[520px] h-[520px] bg-gradient-to-t from-indigo-500/20 via-purple-500/10 to-transparent rounded-full blur-[120px] pointer-events-none" />
+      {theme === "dark" && (
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[520px] h-[520px] bg-gradient-to-t from-indigo-500/20 via-purple-500/10 to-transparent rounded-full blur-[120px]" />
+      )}
 
       <div className="container mx-auto px-6 relative z-10">
         {/* CTA */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
           <div>
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+            <h2
+              className={`text-4xl md:text-6xl font-bold mb-6 tracking-tight ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
               Ready to start <br /> your project?
             </h2>
-            <p className="text-lg text-gray-400 max-w-md">
-              Tell us about your website, brand, or idea. We&apos;ll review it and
-              get back to you with the next steps.
+            <p
+              className={`text-lg max-w-md ${
+                theme === "dark" ? "text-gray-400" : "text-gray-700"
+              }`}
+            >
+              Tell us about your idea. We'll respond with the next steps.
             </p>
           </div>
 
           <div className="flex flex-col items-start md:items-end gap-4">
             <button
               onClick={() => (window.location.href = "/start-project")}
-              className="px-8 py-3 bg-white text-black rounded-full text-sm font-medium tracking-wide hover:bg-gray-100 transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2"
+              className={`px-8 py-3 rounded-full text-sm font-medium tracking-wide flex items-center gap-2 transition-all duration-300 hover:scale-105 active:scale-95 ${
+                theme === "dark"
+                  ? "bg-white text-black hover:bg-gray-100"
+                  : "bg-black text-white hover:bg-gray-900"
+              }`}
             >
               Start a project
               <ArrowRight size={18} />
             </button>
-            <p className="text-xs text-gray-500">
-              Share a few details and we&apos;ll usually respond within 24 hours.
+            <p className={theme === "dark" ? "text-xs text-gray-500" : "text-xs text-gray-600"}>
+              We'll usually respond within 24 hours.
             </p>
           </div>
         </div>
 
-        {/* Bottom line */}
-        <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-white/10 text-sm text-gray-600">
+        {/* Bottom Line */}
+        <div
+          className={`flex flex-col md:flex-row justify-between items-center pt-6 border-t text-sm ${
+            theme === "dark"
+              ? "border-white/10 text-gray-500"
+              : "border-black/10 text-gray-600"
+          }`}
+        >
           <p>&copy; 2026 TVL Studios. All rights reserved.</p>
+
           <div className="flex gap-8 mt-4 md:mt-0">
-            <a href="/privacy-policy" className="hover:text-gray-400 transition-colors">
+            <a
+              href="/privacy-policy"
+              className="hover:text-gray-400 transition-colors"
+            >
               Privacy Policy
             </a>
-            <a href="/terms-of-service" className="hover:text-gray-400 transition-colors">
+            <a
+              href="/terms-of-service"
+              className="hover:text-gray-400 transition-colors"
+            >
               Terms of Service
             </a>
           </div>
@@ -132,7 +215,6 @@ const Footer = () => {
     </footer>
   );
 };
-
 /* -------------------- PAGE CONTENT -------------------- */
 export default function PrivacyPolicyPage() {
   return (
