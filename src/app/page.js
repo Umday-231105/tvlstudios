@@ -34,9 +34,10 @@ function useTheme() {
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
-    const saved = typeof window !== "undefined"
-      ? window.localStorage.getItem("tvl-theme")
-      : null;
+    const saved =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem("tvl-theme")
+        : null;
     if (saved === "dark" || saved === "light") {
       setTheme(saved);
     }
@@ -312,14 +313,11 @@ const Navbar = ({ theme, toggleTheme }) => {
           </button>
         </div>
 
-        {/* mobile menu button */}
-        <button
-          className="md:hidden text-neutral-800 dark:text-neutral-100 flex items-center gap-2"
-          onClick={() => setMobileMenuOpen((v) => !v)}
-        >
+        {/* mobile theme + menu buttons */}
+        <div className="md:hidden flex items-center gap-2 text-neutral-800 dark:text-neutral-100">
           <button
             onClick={toggleTheme}
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-300 hover:bg-neutral-200 transition-all dark:border-neutral-600 dark:hover:bg-neutral-800 mr-1"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-300 hover:bg-neutral-200 transition-all dark:border-neutral-600 dark:hover:bg-neutral-800"
             aria-label="Toggle theme"
           >
             {theme === "light" ? (
@@ -328,8 +326,11 @@ const Navbar = ({ theme, toggleTheme }) => {
               <Sun className="w-4 h-4" />
             )}
           </button>
-          {mobileMenuOpen ? <X /> : <Menu />}
-        </button>
+
+          <button onClick={() => setMobileMenuOpen((v) => !v)}>
+            {mobileMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
 
       {mobileMenuOpen && (
