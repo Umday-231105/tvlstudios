@@ -17,6 +17,7 @@ import {
   Sun,
   Moon,
 } from "lucide-react";
+import { useTheme } from "./ThemeProvider";
 import * as THREE from "three";
 
 // ----------------------
@@ -300,18 +301,17 @@ const Navbar = ({ theme, toggleTheme }) => {
           </button>
 
           {/* theme toggle */}
-          <button
-            onClick={toggleTheme}
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-neutral-300 hover:bg-neutral-200 transition-all dark:border-neutral-600 dark:hover:bg-neutral-800"
-            aria-label="Toggle theme"
-          >
-            {theme === "light" ? (
-              <Moon className="w-4 h-4" />
-            ) : (
-              <Sun className="w-4 h-4" />
-            )}
-          </button>
-        </div>
+         <button
+  onClick={toggleTheme}
+  className="w-9 h-9 flex items-center justify-center rounded-full border border-neutral-300 hover:bg-neutral-200 transition-all dark:border-neutral-600 dark:hover:bg-neutral-800"
+  aria-label="Toggle theme"
+>
+  {theme === "dark" ? (
+    <Sun className="w-4 h-4" />
+  ) : (
+    <Moon className="w-4 h-4" />
+  )}
+</button>
 
         {/* mobile theme + menu buttons */}
         <div className="md:hidden flex items-center gap-2 text-neutral-800 dark:text-neutral-100">
