@@ -1,11 +1,14 @@
-'use client';
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
+import { useTheme } from "../ThemeProvider";
 
 /* -------------------- NAVBAR -------------------- */
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -15,66 +18,58 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-black/80 backdrop-blur-xl border-b border-white/5 py-4"
-          : "bg-transparent py-8"
+          ? theme === "dark"
+            ? "bg-neutral-900/85 backdrop-blur-xl border-b border-neutral-800 py-4"
+            : "bg-white/80 backdrop-blur-xl border-b border-neutral-200 py-4"
+          : theme === "dark"
+          ? "bg-neutral-900/40 backdrop-blur-xl py-6"
+          : "bg-white/60 backdrop-blur-xl py-6"
       }`}
     >
-      <div className="container mx-auto px-6 flex justify-between items-center">
-        {/* Logo */}
-        <a href="/" className="flex items-center gap-3 cursor-pointer group">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:shadow-indigo-500/50 transition-all duration-300">
-            <span className="text-white font-bold text-xl">T</span>
+      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+        <a href="/" className="flex items-center gap-3 group">
+          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-200 via-amber-100 to-lime-100 dark:from-emerald-500/40 dark:via-amber-400/30 dark:to-lime-400/40 flex items-center justify-center shadow-md border border-white/80 dark:border-neutral-800">
+            <span className="text-neutral-900 dark:text-neutral-900 font-semibold text-lg">T</span>
           </div>
-          <span className="text-xl font-bold tracking-tight group-hover:text-indigo-300 transition-colors duration-300">
-            TVL STUDIOS
+
+          <span className="font-medium text-sm tracking-[0.18em] uppercase text-neutral-700 group-hover:text-neutral-900 dark:text-neutral-300 dark:group-hover:text-white transition">
+            TVL Studios
           </span>
         </a>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
-          <a
-            href="/"
-            className="text-sm text-gray-300 hover:text-white transition-colors duration-200"
+        <div className="hidden md:flex items-center gap-5 text-xs text-neutral-600 dark:text-neutral-300">
+          <a href="/" className="hover:text-neutral-900 dark:hover:text-white transition">Home</a>
+          <button
+            onClick={() => (window.location.href = "/start-project")}
+            className="px-4 py-2 rounded-full bg-neutral-900 text-neutral-50 text-xs font-semibold hover:bg-neutral-800 transition dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white"
           >
-            Home
-          </a>
-          <a
-            href="/start-project"
-            className="text-sm text-white px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-200"
-          >
-            Start a Project
-          </a>
+            Start a project
+          </button>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 rounded-full border border-white/10 bg-white/5"
-          onClick={() => setMobileMenuOpen((prev) => !prev)}
+          onClick={() => setMobileMenuOpen((v) => !v)}
+          className="md:hidden text-neutral-700 dark:text-neutral-100"
         >
-          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          {mobileMenuOpen ? <X /> : <Menu />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden mt-3 px-6">
-          <div className="bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex flex-col gap-3">
-            <a
-              href="/"
-              className="text-sm text-gray-300 hover:text-white transition-colors duration-200"
-              onClick={() => setMobileMenuOpen(false)}
+        <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl">
+          <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-3 text-sm text-neutral-800 dark:text-neutral-100">
+            <a href="/" onClick={() => setMobileMenuOpen(false)}>Home</a>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                window.location.href = "/start-project";
+              }}
+              className="px-4 py-2 rounded-full bg-neutral-900 text-neutral-50 dark:bg-neutral-100 dark:text-neutral-900"
             >
-              Home
-            </a>
-            <a
-              href="/start-project"
-              className="text-sm text-white px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-200 text-center"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Start a Project
-            </a>
+              Start a project
+            </button>
           </div>
         </div>
       )}
@@ -84,48 +79,39 @@ const Navbar = () => {
 
 /* -------------------- FOOTER -------------------- */
 const Footer = () => {
-  return (
-    <footer className="bg-black pt-24 pb-12 border-t border-white/10 relative overflow-hidden mt-24">
-      {/* Glow Background */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[520px] h-[520px] bg-gradient-to-t from-indigo-500/20 via-purple-500/10 to-transparent rounded-full blur-[120px] pointer-events-none" />
+  const { theme } = useTheme();
 
-      <div className="container mx-auto px-6 relative z-10">
-        {/* CTA */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+  return (
+    <footer className="w-full border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 py-10">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
           <div>
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-              Ready to start <br /> your project?
+            <h2 className="text-lg md:text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-50">
+              Have something coming up?
             </h2>
-            <p className="text-lg text-gray-400 max-w-md">
-              Tell us about your website, brand, or idea. We&apos;ll review it and
-              get back to you with the next steps.
+            <p className="text-xs text-neutral-600 dark:text-neutral-300 max-w-md">
+              Share your idea, timeline and goals — we’ll get back with clear next steps.
             </p>
           </div>
 
-          <div className="flex flex-col items-start md:items-end gap-4">
+          <div className="flex flex-col items-start md:items-end gap-2 text-xs text-neutral-700 dark:text-neutral-200">
             <button
               onClick={() => (window.location.href = "/start-project")}
-              className="px-8 py-3 bg-white text-black rounded-full text-sm font-medium tracking-wide hover:bg-gray-100 transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2"
+              className="px-5 py-2.5 rounded-full bg-neutral-900 text-neutral-50 font-semibold hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white"
             >
               Start a project
-              <ArrowRight size={18} />
             </button>
-            <p className="text-xs text-gray-500">
-              Share a few details and we&apos;ll usually respond within 24 hours.
-            </p>
+            <span className="flex items-center gap-2 text-neutral-500 dark:text-neutral-400">
+              <strong>Email:</strong> tvlstudioz@gmail.com
+            </span>
           </div>
         </div>
 
-        {/* Bottom line */}
-        <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-white/10 text-sm text-gray-600">
-          <p>&copy; 2026 TVL Studios. All rights reserved.</p>
-          <div className="flex gap-8 mt-4 md:mt-0">
-            <a href="/privacy-policy" className="hover:text-gray-400 transition-colors">
-              Privacy Policy
-            </a>
-            <a href="/terms-of-service" className="hover:text-gray-400 transition-colors">
-              Terms of Service
-            </a>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-[11px] text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800 pt-4">
+          <span>© 2026 TVL Studios.</span>
+          <div className="flex items-center gap-4">
+            <a href="/privacy-policy" className="hover:text-neutral-800 dark:hover:text-neutral-200">Privacy Policy</a>
+            <a href="/terms-of-service" className="hover:text-neutral-800 dark:hover:text-neutral-200">Terms of Service</a>
           </div>
         </div>
       </div>
@@ -133,146 +119,90 @@ const Footer = () => {
   );
 };
 
-/* -------------------- TERMS OF SERVICE PAGE -------------------- */
+/* -------------------- PAGE CONTENT -------------------- */
 export default function TermsOfServicePage() {
+  const { theme } = useTheme();
+
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-purple-900/20 blur-[90px]" />
+    <div
+      className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${
+        theme === "dark" ? "bg-neutral-900 text-neutral-50" : "bg-neutral-50 text-neutral-900"
+      }`}
+    >
+      {/* Light Mode Background */}
+      {theme !== "dark" && <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-neutral-50 to-amber-50/40 pointer-events-none" />}
 
-      {/* Floating Orbs */}
-      <div className="absolute top-20 left-10 w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px] animate-pulse" />
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-purple-600/20 rounded-full blur-[120px] animate-pulse" />
+      {/* Dark Mode Background */}
+      {theme === "dark" && (
+        <>
+          <div className="absolute inset-0 bg-neutral-900" />
+          <div className="absolute inset-0 bg-gradient-to-b from-neutral-900 via-neutral-900 to-neutral-900 opacity-80" />
+        </>
+      )}
 
-      {/* Navbar */}
       <Navbar />
 
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 py-28">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold mb-4">Terms of Service</h1>
-          <p className="text-gray-400 mb-10">Last Updated: 28th November 2025</p>
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-32">
+        <div className="rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white/70 dark:bg-neutral-900/80 backdrop-blur-2xl p-10 shadow-lg">
+          <h1 className="text-3xl md:text-4xl font-semibold mb-4">Terms of Service</h1>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-10">
+            Last Updated: 28th November 2025
+          </p>
 
-          <div className="space-y-6 text-gray-300 leading-relaxed">
+          <div className="space-y-6 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
             <p>
-              These Terms of Service (&quot;Terms&quot;) govern your use of the website,
-              services, and content provided by <strong>TVL Studios</strong>
-              (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;). By accessing or using our website or
-              services, you agree to be bound by these Terms.
+              These Terms of Service ("Terms") govern your access to and use of the services provided by TVL Studios ("we", "us", "our"). By accessing or using our website or services, you agree to be bound by these Terms.
             </p>
 
+            <h2 className="text-xl font-semibold mt-8">1. Services</h2>
             <p>
-              TVL Studios is founded by <strong>Uday Sood</strong> and{" "}
-              <strong>Vishal Baibhav Panda</strong>, with{" "}
-              <strong>Arnav Verma</strong> as Co-Founder.
+              TVL Studios provides design, product and web development services. All project scopes, deliverables, timelines and pricing are defined in separate statements of work or proposals.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-10">1. Use of Our Services</h2>
+            <h2 className="text-xl font-semibold mt-8">2. Payment & Fees</h2>
             <p>
-              You agree to use our website and services only for lawful purposes and in
-              accordance with these Terms. You must not:
-            </p>
-            <ul className="list-disc ml-6 space-y-2">
-              <li>Use the services in any way that violates applicable laws or regulations</li>
-              <li>Attempt to gain unauthorized access to our systems or networks</li>
-              <li>Use our content or brand in a misleading or harmful way</li>
-            </ul>
-
-            <h2 className="text-2xl font-semibold mt-10">2. Project Inquiries and Communication</h2>
-            <p>
-              When you submit a project request or contact us through our forms or email,
-              you agree to provide accurate and complete information. We may contact you
-              using the details you provide to discuss your project, share proposals,
-              or provide service-related information.
+              Unless otherwise agreed in writing, fees are invoiced according to the project proposal. Late payments may incur interest or suspension of services.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-10">3. Intellectual Property</h2>
+            <h2 className="text-xl font-semibold mt-8">3. Intellectual Property</h2>
             <p>
-              All content on this website, including but not limited to text, graphics,
-              logos, designs, and layouts, is owned by or licensed to TVL Studios and is
-              protected by copyright and other intellectual property laws.
-            </p>
-            <p>
-              You may not copy, reproduce, distribute, or create derivative works from
-              our content without our prior written permission.
+              Unless agreed otherwise, we retain rights to design process materials and templates. Delivered final assets are licensed to the client as specified in the project agreement.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-10">4. Third-Party Tools and Links</h2>
+            <h2 className="text-xl font-semibold mt-8">4. Confidentiality</h2>
             <p>
-              Our website may use third-party tools (such as analytics, forms, or embeds)
-              or contain links to third-party websites. We do not control these third
-              parties and are not responsible for their content or practices. Your use of
-              third-party services is subject to their own terms and policies.
+              Both parties agree to keep confidential information private and use it only to perform obligations under these Terms.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-10">5. Payments and Proposals</h2>
+            <h2 className="text-xl font-semibold mt-8">5. Termination</h2>
             <p>
-              If you engage TVL Studios for paid services, specific terms (such as scope,
-              pricing, timelines, and payment terms) will be defined in separate proposals,
-              invoices, or agreements. Those specific terms will apply in addition to these
-              general Terms.
+              Either party may terminate the engagement in accordance with the project agreement. On termination, outstanding invoices become due and we will provide reasonable handover materials.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-10">6. Disclaimer of Warranties</h2>
+            <h2 className="text-xl font-semibold mt-8">6. Disclaimers & Limitation of Liability</h2>
             <p>
-              Our website and services are provided on an &quot;as-is&quot; and &quot;as-available&quot;
-              basis. While we aim to keep our content accurate and up to date, we make
-              no warranties or representations of any kind, express or implied, about:
-            </p>
-            <ul className="list-disc ml-6 space-y-2">
-              <li>The completeness, accuracy, or reliability of any content</li>
-              <li>The availability or uninterrupted operation of the website</li>
-              <li>The suitability of our services for your specific needs</li>
-            </ul>
-
-            <h2 className="text-2xl font-semibold mt-10">7. Limitation of Liability</h2>
-            <p>
-              To the fullest extent permitted by law, TVL Studios and its founders shall
-              not be liable for any indirect, incidental, special, consequential, or
-              punitive damages arising out of or related to your use of our website or
-              services.
+              We make reasonable efforts to deliver quality work, but do not guarantee results. Our liability is limited to direct damages up to the total fees paid for the services in question.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-10">8. Indemnification</h2>
+            <h2 className="text-xl font-semibold mt-8">7. Governing Law</h2>
             <p>
-              You agree to indemnify and hold harmless TVL Studios, its founders, and
-              team members from any claims, damages, or losses arising out of your use of
-              the website, your violation of these Terms, or your infringement of any
-              rights of a third party.
+              These Terms are governed by applicable law where TVL Studios is incorporated. Any disputes will be resolved in the competent courts.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-10">9. Termination</h2>
+            <h2 className="text-xl font-semibold mt-8">8. Changes to Terms</h2>
             <p>
-              We reserve the right to suspend or terminate your access to our website or
-              services at any time, without notice, if we believe you have violated these
-              Terms or engaged in harmful or unlawful activity.
+              We may update these Terms occasionally. Continued use of our services after changes implies acceptance of the updated Terms.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-10">10. Changes to These Terms</h2>
+            <h2 className="text-xl font-semibold mt-8">9. Contact</h2>
             <p>
-              We may update these Terms of Service from time to time. Any changes will be
-              posted on this page with an updated &quot;Last Updated&quot; date. Your continued
-              use of the website or services after changes are posted constitutes your
-              acceptance of the revised Terms.
-            </p>
-
-            <h2 className="text-2xl font-semibold mt-10">11. Contact Us</h2>
-            <p>
-              If you have any questions about these Terms, you can contact us at:
-            </p>
-            <p>
-              <strong>Email:</strong> tvlstudioz@gmail.com <br />
-              <strong>Company:</strong> TVL Studios <br />
-              <strong>Founders:</strong> Uday Sood, Vishal Baibhav Panda <br />
-              <strong>Co-Founder:</strong> Arnav Verma
+              For questions about these Terms, contact us at <strong>tvlstudioz@gmail.com</strong>.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
 }
-
