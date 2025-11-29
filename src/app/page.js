@@ -340,7 +340,11 @@ export default function App() {
     <div className={theme === "dark" ? "dark" : ""}>
 
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900 relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden
+  bg-neutral-50 text-neutral-900 
+  dark:bg-neutral-900 dark:text-neutral-100 
+  transition-colors duration-500">
+
       <ThreeBackground />
 
       <div className="relative z-10 flex flex-col min-h-screen">
