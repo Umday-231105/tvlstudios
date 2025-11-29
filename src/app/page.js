@@ -326,6 +326,11 @@ const Navbar = () => {
 // Main App
 // -------------
 export default function App() {
+  const { theme, toggleTheme } = useTheme();
+
+  return (
+    <div className={theme === "dark" ? "dark" : ""}>
+
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-900 relative overflow-hidden">
       <ThreeBackground />
@@ -807,5 +812,6 @@ export default function App() {
         </footer>
       </div>
     </div>
+  </div>
   );
 }
