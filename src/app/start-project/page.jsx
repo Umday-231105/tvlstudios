@@ -18,16 +18,19 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled
-          ? theme === "dark"
-            ? "bg-neutral-900/85 backdrop-blur-xl border-b border-neutral-800 py-4"
-            : "bg-white/80 backdrop-blur-xl border-b border-neutral-200 py-4"
-          : theme === "dark"
-          ? "bg-neutral-900/40 backdrop-blur-xl py-6"
-          : "bg-white/60 backdrop-blur-xl py-6"
-      }`}
-    >
+  // expose a CSS variable so main/sections can offset below the fixed navbar
+  style={{ ['--nav-height']: '72px' }}
+  className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+    isScrolled
+      ? theme === "dark"
+        ? "bg-neutral-900/85 backdrop-blur-xl border-b border-neutral-800 py-4"
+        : "bg-white/80 backdrop-blur-xl border-b border-neutral-200 py-4"
+      : theme === "dark"
+      ? "bg-neutral-900/40 backdrop-blur-xl py-6"
+      : "bg-white/60 backdrop-blur-xl py-6"
+  }`}
+>
+
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
         <a href="/" className="flex items-center gap-3 group">
           <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-200 via-amber-100 to-lime-100 dark:from-emerald-500/40 dark:via-amber-400/30 dark:to-lime-400/40 flex items-center justify-center shadow-md border border-white/80 dark:border-neutral-800">
@@ -138,12 +141,13 @@ export default function StartProjectPage() {
 
   return (
     <div
-      className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${
-        theme === "dark"
-          ? "bg-neutral-900 text-neutral-50"
-          : "bg-neutral-50 text-neutral-900"
-      }`}
-    >
+      className={`min-h-screen relative overflow-hidden transition-colors duration-500 flex flex-col ${
+         theme === "dark"
+           ? "bg-neutral-900 text-neutral-50"
+           : "bg-neutral-50 text-neutral-900"
+  }`}
+>
+
       {/* --- Light Mode Background --- */}
       {theme === "light" && (
         <div className="absolute inset-0 bg-gradient-to-b from-white via-neutral-50 to-emerald-50/30 z-0"></div>
@@ -161,9 +165,10 @@ export default function StartProjectPage() {
       <Navbar />
 
       {/* ---------- MAIN GLASS CARD ---------- */}
-      <main className="relative z-10 max-w-4xl mx-auto px-6 py-32">
+      <main className="relative z-10 flex-1 pt-[var(--nav-height)]">
         <div
           className="
+            w-full max-w-4xl
             rounded-3xl
             bg-white/20 dark:bg-neutral-800/30
             backdrop-blur-2xl
@@ -173,7 +178,7 @@ export default function StartProjectPage() {
           "
         >
           <h1 className="text-3xl md:text-4xl font-semibold mb-4">Start a Project</h1>
-          <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-10">
+      <p className="text-sm text-neutral-700 dark:text-neutral-300 mb-10">
             Tell us about what you're building — we’ll get back within 24 hours.
           </p>
 
@@ -181,31 +186,31 @@ export default function StartProjectPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Name */}
             <div>
-              <label className="text-xs font-semibold">Name</label>
-              <input
-                className="w-full px-4 py-2 mt-1 rounded-lg bg-white/30 dark:bg-neutral-900/30 backdrop-blur-xl border border-white/40 dark:border-neutral-700 text-sm"
-                placeholder="Your name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-              />
-              {errors.name && (
-                <p className="text-xs text-rose-500 mt-1">{errors.name}</p>
-              )}
-            </div>
+             <label className="text-xs font-semibold">Name</label>
+             <input
+               className="w-full px-4 py-2 mt-1 rounded-lg bg-white/30 dark:bg-neutral-900/30 backdrop-blur-xl border border-white/40 dark:border-neutral-700 text-sm"
+               placeholder="Your name"
+               value={form.name}
+               onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+            {errors.name && (
+              <p className="text-xs text-rose-500 mt-1">{errors.name}</p>
+           )}
+        </div>
 
             {/* Email */}
             <div>
               <label className="text-xs font-semibold">Email</label>
               <input
-                className="w-full px-4 py-2 mt-1 rounded-lg bg-white/30 dark:bg-neutral-900/30 backdrop-blur-xl border border-white/40 dark:border-neutral-700 text-sm"
-                placeholder="email@example.com"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
+               className="w-full px-4 py-2 mt-1 rounded-lg bg-white/30 dark:bg-neutral-900/30 backdrop-blur-xl border border-white/40 dark:border-neutral-700 text-sm"
+               placeholder="email@example.com"
+               value={form.email}
+               onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
               {errors.email && (
-                <p className="text-xs text-rose-500 mt-1">{errors.email}</p>
+               <p className="text-xs text-rose-500 mt-1">{errors.email}</p>
               )}
-            </div>
+        </div>
 
             {/* Company */}
             <div>
@@ -216,7 +221,7 @@ export default function StartProjectPage() {
                 value={form.company}
                 onChange={(e) => setForm({ ...form, company: e.target.value })}
               />
-            </div>
+        </div>
 
             {/* Message */}
             <div>
@@ -228,7 +233,8 @@ export default function StartProjectPage() {
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
               />
-            </div>
+        </div>
+
 
             {/* Submit */}
             <button
@@ -239,10 +245,10 @@ export default function StartProjectPage() {
             </button>
 
             {submitted && (
-              <p className="text-emerald-500 text-sm mt-2">Message received!</p>
+               <p className="text-emerald-500 text-sm mt-2">Message received!</p>
             )}
-          </form>
-        </div>
+       </form>
+      </div>
       </main>
 
       {/* FOOTER */}
