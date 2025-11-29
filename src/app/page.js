@@ -258,7 +258,15 @@ const Navbar = ({ theme, toggleTheme }) => {
           </span>
         </a>
 
-        <div className="hidden md:flex items-center gap-6 text-xs text-neutral-600">
+        <button
+  onClick={toggleTheme}
+  className="w-9 h-9 flex items-center justify-center rounded-full border border-neutral-300 
+             hover:bg-neutral-200 transition-all
+             dark:border-neutral-700 dark:hover:bg-neutral-700"
+>
+  {theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+</button>
+
           <a href="#about" className="hover:text-neutral-900 transition-colors">
             About
           </a>
