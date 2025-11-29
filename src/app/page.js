@@ -230,7 +230,7 @@ const Reveal = ({ children, delay = 0, className = "" }) => (
 );
 
 // --------- Navbar ----------
-const Navbar = () => {
+const Navbar = ({ theme, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
