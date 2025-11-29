@@ -225,117 +225,94 @@ const Navbar = ({ theme, toggleTheme }) => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-        isScrolled
-          ? "bg-white/80 dark:bg-neutral-900/85 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800"
-          : "bg-gradient-to-b from-white/90 dark:from-neutral-900/90 to-transparent"
-      }`}
-    >
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-200 via-amber-100 to-lime-100 dark:from-emerald-500/40 dark:via-amber-400/30 dark:to-lime-400/40 flex items-center justify-center shadow-md shadow-neutral-300/70 dark:shadow-black/40 border border-white/80 dark:border-neutral-800">
-            <span className="text-neutral-900 dark:text-neutral-900 font-semibold text-lg">
-              T
-            </span>
-          </div>
-          <span className="font-medium text-sm tracking-[0.18em] uppercase text-neutral-700 group-hover:text-neutral-900 dark:text-neutral-300 dark:group-hover:text-white">
-            TVL Studios
-          </span>
-        </a>
-
-        {/* desktop nav */}
-        <div className="hidden md:flex items-center gap-4 text-xs text-neutral-600 dark:text-neutral-300">
-          <a
-            href="#about"
-            className="hover:text-neutral-900 dark:hover:text-white transition-colors"
-          >
-            About
-          </a>
-          <a
-            href="#services"
-            className="hover:text-neutral-900 dark:hover:text-white transition-colors"
-          >
-            Services
-          </a>
-          <a
-            href="#process"
-            className="hover:text-neutral-900 dark:hover:text-white transition-colors"
-          >
-            Process
-          </a>
-          <a
-            href="#work"
-            className="hover:text-neutral-900 dark:hover:text-white transition-colors"
-          >
-            Work
-          </a>
-
-          <button
-            onClick={() => (window.location.href = "/start-project")}
-            className="ml-2 px-4 py-2 rounded-full bg-neutral-900 text-neutral-50 text-xs font-semibold hover:bg-neutral-800 transition-all shadow-sm shadow-neutral-400/60 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white"
-          >
-            Start a project
-          </button>
-
-          {/* theme toggle */}
-         <button
-  onClick={toggleTheme}
-  className="w-9 h-9 flex items-center justify-center rounded-full border border-neutral-300 hover:bg-neutral-200 transition-all dark:border-neutral-600 dark:hover:bg-neutral-800"
-  aria-label="Toggle theme"
+  className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+    isScrolled
+      ? "bg-white/80 dark:bg-neutral-900/85 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800"
+      : "bg-gradient-to-b from-white/90 dark:from-neutral-900/90 to-transparent"
+  }`}
 >
-  {theme === "dark" ? (
-    <Sun className="w-4 h-4" />
-  ) : (
-    <Moon className="w-4 h-4" />
-  )}
-</button>
-
-        {/* mobile theme + menu buttons */}
-        <div className="md:hidden flex items-center gap-2 text-neutral-800 dark:text-neutral-100">
-          <button
-            onClick={toggleTheme}
-            className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-300 hover:bg-neutral-200 transition-all dark:border-neutral-600 dark:hover:bg-neutral-800"
-            aria-label="Toggle theme"
-          >
-            {theme === "light" ? (
-              <Moon className="w-4 h-4" />
-            ) : (
-              <Sun className="w-4 h-4" />
-            )}
-          </button>
-
-          <button onClick={() => setMobileMenuOpen((v) => !v)}>
-            {mobileMenuOpen ? <X /> : <Menu />}
-          </button>
-        </div>
+  <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    
+    {/* LOGO */}
+    <a href="/" className="flex items-center gap-2 group">
+      <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-200 via-amber-100 to-lime-100 dark:from-emerald-500/40 dark:via-amber-400/30 dark:to-lime-400/40 flex items-center justify-center shadow-md shadow-neutral-300/70 dark:shadow-black/40 border border-white/80 dark:border-neutral-800">
+        <span className="text-neutral-900 dark:text-neutral-900 font-semibold text-lg">
+          T
+        </span>
       </div>
+      <span className="font-medium text-sm tracking-[0.18em] uppercase text-neutral-700 group-hover:text-neutral-900 dark:text-neutral-300 dark:group-hover:text-white">
+        TVL Studios
+      </span>
+    </a>
 
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl">
-          <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-3 text-sm text-neutral-800 dark:text-neutral-100">
-            {["about", "services", "process", "work"].map((id) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-1"
-              >
-                {id.charAt(0).toUpperCase() + id.slice(1)}
-              </a>
-            ))}
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                window.location.href = "/start-project";
-              }}
-              className="mt-2 px-4 py-2 rounded-full bg-neutral-900 text-neutral-50 text-xs font-semibold dark:bg-neutral-100 dark:text-neutral-900"
-            >
-              Start a project
-            </button>
-          </div>
-        </div>
-      )}
-    </nav>
+    {/* DESKTOP NAV */}
+    <div className="hidden md:flex items-center gap-4 text-xs text-neutral-600 dark:text-neutral-300">
+      <a href="#about" className="hover:text-neutral-900 dark:hover:text-white">About</a>
+      <a href="#services" className="hover:text-neutral-900 dark:hover:text-white">Services</a>
+      <a href="#process" className="hover:text-neutral-900 dark:hover:text-white">Process</a>
+      <a href="#work" className="hover:text-neutral-900 dark:hover:text-white">Work</a>
+
+      <button
+        onClick={() => (window.location.href = "/start-project")}
+        className="ml-2 px-4 py-2 rounded-full bg-neutral-900 text-neutral-50 text-xs font-semibold hover:bg-neutral-800 transition-all shadow-sm dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white"
+      >
+        Start a project
+      </button>
+
+      {/* DESKTOP THEME TOGGLE */}
+      <button
+        onClick={toggleTheme}
+        className="w-9 h-9 flex items-center justify-center rounded-full border border-neutral-300 hover:bg-neutral-200 transition-all dark:border-neutral-600 dark:hover:bg-neutral-800"
+        aria-label="Toggle theme"
+      >
+        {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+      </button>
+    </div>
+
+    {/* MOBILE THEME + MENU  (FIXED SECTION — MOVED OUTSIDE DESKTOP NAV) */}
+    <div className="md:hidden flex items-center gap-2 text-neutral-800 dark:text-neutral-100">
+      <button
+        onClick={toggleTheme}
+        className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-300 hover:bg-neutral-200 transition-all dark:border-neutral-600 dark:hover:bg-neutral-800"
+        aria-label="Toggle theme"
+      >
+        {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+      </button>
+
+      <button onClick={() => setMobileMenuOpen((v) => !v)}>
+        {mobileMenuOpen ? <X /> : <Menu />}
+      </button>
+    </div>
+  </div>
+
+  {/* MOBILE DROPDOWN MENU */}
+  {mobileMenuOpen && (
+    <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl">
+      <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-3 text-sm text-neutral-800 dark:text-neutral-100">
+        {["about", "services", "process", "work"].map((id) => (
+          <a
+            key={id}
+            href={`#${id}`}
+            onClick={() => setMobileMenuOpen(false)}
+            className="py-1"
+          >
+            {id.charAt(0).toUpperCase() + id.slice(1)}
+          </a>
+        ))}
+        <button
+          onClick={() => {
+            setMobileMenuOpen(false);
+            window.location.href = "/start-project";
+          }}
+          className="mt-2 px-4 py-2 rounded-full bg-neutral-900 text-neutral-50 text-xs font-semibold dark:bg-neutral-100 dark:text-neutral-900"
+        >
+          Start a project
+        </button>
+      </div>
+    </div>
+  )}
+</nav>
+
   );
 };
 
