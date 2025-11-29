@@ -2,8 +2,8 @@ import "./globals.css";
 import ThemeProvider from "./ThemeProvider";
 
 export const metadata = {
-  title: "Your Website",
-  description: "Your description",
+  title: "TVL Studios",
+  description: "Portfolio website",
 };
 
 export default function RootLayout({ children }) {
