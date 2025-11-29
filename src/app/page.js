@@ -336,7 +336,7 @@ export default function App() {
       <ThreeBackground />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        <Navbar />
+        <Navbar theme={theme} toggleTheme={toggleTheme} />
 
         {/* HERO – light with warm gradient */}
         <main className="w-full pt-24 md:pt-28 pb-16 bg-gradient-to-b from-emerald-50/60 via-neutral-50 to-amber-50/40">
