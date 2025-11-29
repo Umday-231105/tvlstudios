@@ -31,29 +31,6 @@ const SMOOTH_TRANSITION = {
 // ----------------------
 // Theme hook (light / dark + localStorage)
 // ----------------------
-function useTheme() {
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    const saved =
-      typeof window !== "undefined"
-        ? window.localStorage.getItem("tvl-theme")
-        : null;
-    if (saved === "dark" || saved === "light") {
-      setTheme(saved);
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const next = theme === "light" ? "dark" : "light";
-    setTheme(next);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("tvl-theme", next);
-    }
-  };
-
-  return { theme, toggleTheme };
-}
 
 // ----------------------
 // Subtle, neutral 3D background
