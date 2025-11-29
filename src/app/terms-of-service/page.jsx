@@ -40,7 +40,10 @@ const Navbar = () => {
         </a>
 
         <div className="hidden md:flex items-center gap-5 text-xs text-neutral-600 dark:text-neutral-300">
-          <a href="/" className="hover:text-neutral-900 dark:hover:text-white transition">Home</a>
+          <a href="/" className="hover:text-neutral-900 dark:hover:text-white transition">
+            Home
+          </a>
+
           <button
             onClick={() => (window.location.href = "/start-project")}
             className="px-4 py-2 rounded-full bg-neutral-900 text-neutral-50 text-xs font-semibold hover:bg-neutral-800 transition dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white"
@@ -60,7 +63,9 @@ const Navbar = () => {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl">
           <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-3 text-sm text-neutral-800 dark:text-neutral-100">
-            <a href="/" onClick={() => setMobileMenuOpen(false)}>Home</a>
+            <a href="/" onClick={() => setMobileMenuOpen(false)}>
+              Home
+            </a>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
@@ -80,9 +85,8 @@ const Navbar = () => {
 /* -------------------- FOOTER -------------------- */
 const Footer = () => {
   const { theme } = useTheme();
-
   return (
-    <footer className="w-full border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 py-10">
+    <footer className="w-full border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 py-10 relative z-10">
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
           <div>
@@ -101,6 +105,7 @@ const Footer = () => {
             >
               Start a project
             </button>
+
             <span className="flex items-center gap-2 text-neutral-500 dark:text-neutral-400">
               <strong>Email:</strong> tvlstudioz@gmail.com
             </span>
@@ -110,8 +115,12 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-[11px] text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800 pt-4">
           <span>© 2026 TVL Studios.</span>
           <div className="flex items-center gap-4">
-            <a href="/privacy-policy" className="hover:text-neutral-800 dark:hover:text-neutral-200">Privacy Policy</a>
-            <a href="/terms-of-service" className="hover:text-neutral-800 dark:hover:text-neutral-200">Terms of Service</a>
+            <a href="/privacy-policy" className="hover:text-neutral-800 dark:hover:text-neutral-200">
+              Privacy Policy
+            </a>
+            <a href="/terms-of-service" className="hover:text-neutral-800 dark:hover:text-neutral-200">
+              Terms of Service
+            </a>
           </div>
         </div>
       </div>
@@ -129,19 +138,30 @@ export default function TermsOfServicePage() {
         theme === "dark" ? "bg-neutral-900 text-neutral-50" : "bg-neutral-50 text-neutral-900"
       }`}
     >
+      {/* ---------- BACKGROUNDS (ensure z-0 so footer/content are visible) ---------- */}
       {/* Light Mode Background */}
-      {theme !== "dark" && <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-neutral-50 to-amber-50/40 pointer-events-none" />}
+      {theme !== "dark" && (
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-white/90 via-neutral-50 to-amber-50/40 pointer-events-none z-0"
+          aria-hidden
+        />
+      )}
 
       {/* Dark Mode Background */}
       {theme === "dark" && (
         <>
-          <div className="absolute inset-0 bg-neutral-900" />
-          <div className="absolute inset-0 bg-gradient-to-b from-neutral-900 via-neutral-900 to-neutral-900 opacity-80" />
+          <div className="absolute inset-0 bg-neutral-900 z-0" aria-hidden />
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-neutral-900 via-neutral-900 to-neutral-900 opacity-80 z-0"
+            aria-hidden
+          />
         </>
       )}
 
+      {/* Navbar (fixed z-50) */}
       <Navbar />
 
+      {/* Main content container - z-10 so it's above background */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-32">
         <div className="rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white/70 dark:bg-neutral-900/80 backdrop-blur-2xl p-10 shadow-lg">
           <h1 className="text-3xl md:text-4xl font-semibold mb-4">Terms of Service</h1>
@@ -202,6 +222,7 @@ export default function TermsOfServicePage() {
         </div>
       </div>
 
+      {/* Footer (z-10 so visible above background) */}
       <Footer />
     </div>
   );
