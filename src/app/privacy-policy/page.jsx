@@ -34,6 +34,7 @@ const Navbar = () => {
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
+    window.dispatchEvent(new Event("tvl-open-assistant"));
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -54,7 +55,6 @@ const Navbar = () => {
             TVL Studios
           </span>
         </a>
-        window.dispatchEvent(new Event("tvl-open-assistant"));
 
         <div className="hidden md:flex items-center gap-6 text-[13px] text-slate-600">
           <a href="/" className="hover:text-slate-900 transition-colors">
