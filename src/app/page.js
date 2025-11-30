@@ -114,6 +114,10 @@ const Navbar = () => {
                 {id.charAt(0).toUpperCase() + id.slice(1)}
               </a>
             ))}
+     <a href="/assistant" onClick={() => setMobileMenuOpen(false)}>
+  Assistant
+</a>
+
             <button
               onClick={() => {
                 setMobileOpen(false);
