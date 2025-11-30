@@ -561,11 +561,10 @@ export default function App() {
                       Concept
                     </p>
                     <h3 className="font-semibold text-slate-900">
-                      Launch site for an AI product
+                      Open Word War
                     </h3>
                     <p className="mt-2 text-xs text-slate-600">
-                      A focused marketing site for a new tool with a clear story,
-                      tight visual system and a single primary action.
+                      A focused branding and social media management for MUN.
                     </p>
                   </div>
                 </div>
@@ -579,11 +578,10 @@ export default function App() {
                       Client
                     </p>
                     <h3 className="font-semibold text-slate-900">
-                      Visual system for a hospitality brand
+                      Jibhi Homestead Cabins
                     </h3>
                     <p className="mt-2 text-xs text-slate-600">
-                      Layout, visuals and site structure for a stay that feels
-                      warm and understated instead of loud and busy.
+                      Crafting a warm, nature‑first website for Jibhi Homestead Cabins.
                     </p>
                   </div>
                 </div>
