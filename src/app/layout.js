@@ -1,18 +1,18 @@
 import "./globals.css";
-import ThemeProvider from "./ThemeProvider";
+import AssistantWidget from "../components/AssistantWidget";
 
 export const metadata = {
   title: "TVL Studios",
-  description: "Portfolio website",
+  description: "Design, product & web for modern teams.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+      <body className="bg-slate-50">
+        {children}
+        {/* Floating AI widget on every page */}
+        <AssistantWidget />
       </body>
     </html>
   );
