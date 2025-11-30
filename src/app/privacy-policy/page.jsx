@@ -1,7 +1,6 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Mail, Instagram as InstagramIcon } from "lucide-react";
 
 // ---------------- NAVBAR ----------------
 const Navbar = () => {
@@ -41,15 +40,9 @@ const Navbar = () => {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6 text-[13px] text-slate-600">
-          <a href="/" className="hover:text-slate-900 transition-colors">
-            Home
-          </a>
-          <a href="/#services" className="hover:text-slate-900 transition-colors">
-            Services
-          </a>
-          <a href="/#work" className="hover:text-slate-900 transition-colors">
-            Work
-          </a>
+          <a href="/" className="hover:text-slate-900 transition-colors">Home</a>
+          <a href="/#services" className="hover:text-slate-900 transition-colors">Services</a>
+          <a href="/#work" className="hover:text-slate-900 transition-colors">Work</a>
 
           <button
             type="button"
@@ -122,6 +115,56 @@ const Navbar = () => {
   );
 };
 
+// ---------------- FOOTER ----------------
+const Footer = () => (
+  <footer className="w-full border-t border-slate-100 bg-slate-50 py-10">
+    <div className="max-w-6xl mx-auto px-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
+        <div>
+          <h2 className="text-lg md:text-xl font-semibold mb-2 text-slate-900">
+            Prefer email instead?
+          </h2>
+          <p className="text-xs text-slate-600 max-w-md">
+            You can always reach out directly with context and links.
+          </p>
+        </div>
+
+        <div className="flex flex-col items-start md:items-end gap-2 text-xs text-slate-700">
+          <div className="flex items-center gap-2">
+            <Mail className="w-3.5 h-3.5 text-sky-500" />
+            <span>tvlstudioz@gmail.com</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-[11px] text-slate-500 border-t border-slate-100 pt-4">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-sky-500 via-emerald-400 to-teal-300 flex items-center justify-center">
+            <span className="text-slate-900 text-sm font-semibold">T</span>
+          </div>
+          <span>© 2026 TVL Studios.</span>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <a
+            href="https://www.instagram.com/tvlstudios.xyz/"
+            className="flex items-center gap-1 hover:text-slate-700 transition-colors"
+          >
+            <InstagramIcon className="w-3.5 h-3.5" />
+            Instagram
+          </a>
+          <a href="/privacy-policy" className="hover:text-slate-700 transition-colors">
+            Privacy Policy
+          </a>
+          <a href="/terms-of-service" className="hover:text-slate-700 transition-colors">
+            Terms of Service
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+);
+
 // ---------------- PAGE ----------------
 export default function PrivacyPolicyPage() {
   return (
@@ -129,12 +172,8 @@ export default function PrivacyPolicyPage() {
       <Navbar />
 
       <main className="pt-24 pb-16 max-w-4xl mx-auto px-4">
-        <h1 className="text-2xl md:text-3xl font-semibold mb-3">
-          Privacy Policy
-        </h1>
-        <p className="text-sm text-slate-600 mb-6">
-          Last updated: November 30, 2025
-        </p>
+        <h1 className="text-2xl md:text-3xl font-semibold mb-3">Privacy Policy</h1>
+        <p className="text-sm text-slate-600 mb-6">Last updated: November 30, 2025</p>
 
         <div className="rounded-3xl bg-white border border-slate-200 shadow-sm p-6 md:p-8 text-sm text-slate-700 space-y-5">
           <p>
@@ -144,76 +183,56 @@ export default function PrivacyPolicyPage() {
           </p>
 
           <section>
-            <h2 className="font-semibold mb-1.5 text-slate-900">
-              Information we collect
-            </h2>
+            <h2 className="font-semibold mb-1.5 text-slate-900">Information we collect</h2>
             <p>
               When you submit the Start a Project form or contact us by email,
-              we collect the details you share, such as your name, email address
-              and a description of your project. We do not knowingly collect
-              sensitive personal information.
+              we collect the details you share — such as your name, email address,
+              and a description of your project.
             </p>
           </section>
 
           <section>
-            <h2 className="font-semibold mb-1.5 text-slate-900">
-              How we use your information
-            </h2>
+            <h2 className="font-semibold mb-1.5 text-slate-900">How we use your information</h2>
             <p>
-              We use the information you provide to understand your project,
-              respond to your enquiry and, if we work together, to manage our
-              collaboration. We do not sell your data to third parties.
+              We use your information to understand your project, respond to your
+              enquiry, and manage our collaboration if we proceed.
             </p>
           </section>
 
           <section>
-            <h2 className="font-semibold mb-1.5 text-slate-900">
-              Analytics & tooling
-            </h2>
+            <h2 className="font-semibold mb-1.5 text-slate-900">Analytics & tooling</h2>
             <p>
-              We may use privacy‑respecting analytics or infrastructure tools
-              (such as hosting platforms) that collect basic technical
-              information like device type, approximate region or pages visited.
-              This helps us understand how the site is being used and keep it
-              reliable.
+              We may use privacy‑respecting analytics that collect basic
+              technical data like region or pages visited.
             </p>
           </section>
 
           <section>
-            <h2 className="font-semibold mb-1.5 text-slate-900">
-              How long we keep data
-            </h2>
+            <h2 className="font-semibold mb-1.5 text-slate-900">How long we keep data</h2>
             <p>
-              We keep project enquiries and related communication for as long as
-              reasonably necessary to discuss potential work or maintain our
-              records if we collaborate.
+              We keep enquiry information for as long as necessary to evaluate
+              potential projects or maintain project records.
             </p>
           </section>
 
           <section>
-            <h2 className="font-semibold mb-1.5 text-slate-900">
-              Your choices
-            </h2>
+            <h2 className="font-semibold mb-1.5 text-slate-900">Your choices</h2>
             <p>
-              You can ask us to update or delete information you have shared
-              with us, subject to any legal obligations we have to keep certain
-              records. Reach us at{" "}
+              You may request updates or deletion of your data. Email us at{" "}
               <span className="font-medium">tvlstudioz@gmail.com</span>.
             </p>
           </section>
 
           <section>
-            <h2 className="font-semibold mb-1.5 text-slate-900">
-              Changes to this policy
-            </h2>
+            <h2 className="font-semibold mb-1.5 text-slate-900">Changes to this policy</h2>
             <p>
-              We may update this policy from time to time as our studio or
-              tooling changes. The "Last updated" date will always show the most
-              recent version.
+              We may update this policy as our tools or process change.
             </p>
           </section>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }
