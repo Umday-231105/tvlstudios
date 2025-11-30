@@ -64,6 +64,10 @@ const Navbar = () => {
             TVL Studios
           </span>
         </a>
+        <a href="/assistant" className="hover:text-blue-600 transition">
+  Assistant
+</a>
+
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6 text-[13px] text-slate-600">
