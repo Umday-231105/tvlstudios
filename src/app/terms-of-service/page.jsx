@@ -1,7 +1,6 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Mail, Instagram as InstagramIcon } from "lucide-react";
 
 // ---------------- NAVBAR ----------------
 const Navbar = () => {
@@ -50,7 +49,6 @@ const Navbar = () => {
           <a href="/#work" className="hover:text-slate-900 transition-colors">
             Work
           </a>
-
           <button
             type="button"
             onClick={openAssistant}
@@ -58,7 +56,6 @@ const Navbar = () => {
           >
             Assistant
           </button>
-
           <button
             onClick={() => (window.location.href = "/start-project")}
             className="ml-2 px-4 py-2 rounded-full bg-sky-600 text-white text-xs font-semibold hover:bg-sky-500 transition-all shadow-sm shadow-sky-500/40"
@@ -94,7 +91,6 @@ const Navbar = () => {
                 {item.label}
               </a>
             ))}
-
             <button
               type="button"
               className="text-left py-1"
@@ -105,7 +101,6 @@ const Navbar = () => {
             >
               Assistant
             </button>
-
             <button
               onClick={() => {
                 setMobileOpen(false);
@@ -122,12 +117,60 @@ const Navbar = () => {
   );
 };
 
+// ---------------- FOOTER ----------------
+const Footer = () => (
+  <footer className="w-full border-t border-slate-100 bg-slate-50 py-10 mt-8">
+    <div className="max-w-6xl mx-auto px-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
+        <div>
+          <h2 className="text-lg md:text-xl font-semibold mb-2 text-slate-900">
+            Have questions?
+          </h2>
+          <p className="text-xs text-slate-600 max-w-md">
+            If anything in these terms is unclear, reach out and we&apos;ll be happy
+            to clarify.
+          </p>
+        </div>
+        <div className="flex flex-col items-start md:items-end gap-2 text-xs text-slate-700">
+          <div className="flex items-center gap-2">
+            <Mail className="w-3.5 h-3.5 text-sky-500" />
+            <span>tvlstudioz@gmail.com</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-[11px] text-slate-500 border-t border-slate-100 pt-4">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-sky-500 via-emerald-400 to-teal-300 flex items-center justify-center">
+            <span className="text-slate-900 text-sm font-semibold">T</span>
+          </div>
+          <span>© 2026 TVL Studios.</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <a
+            href="https://www.instagram.com/tvlstudios.xyz/"
+            className="flex items-center gap-1 hover:text-slate-700 transition-colors"
+          >
+            <InstagramIcon className="w-3.5 h-3.5" />
+            Instagram
+          </a>
+          <a href="/privacy-policy" className="hover:text-slate-700 transition-colors">
+            Privacy Policy
+          </a>
+          <a href="/terms-of-service" className="hover:text-slate-700 transition-colors">
+            Terms of Service
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+);
+
 // ---------------- PAGE ----------------
 export default function TermsOfServicePage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <Navbar />
-
       <main className="pt-24 pb-16 max-w-4xl mx-auto px-4">
         <h1 className="text-2xl md:text-3xl font-semibold mb-3">
           Terms of Service
@@ -136,8 +179,8 @@ export default function TermsOfServicePage() {
           These terms outline how TVL Studios works with clients and how this
           website may be used.
         </p>
-
         <div className="rounded-3xl bg-white border border-slate-200 shadow-sm p-6 md:p-8 text-sm text-slate-700 space-y-5">
+          {/* your sections stay exactly the same */}
           <section>
             <h2 className="font-semibold mb-1.5 text-slate-900">1. General</h2>
             <p>
@@ -146,7 +189,6 @@ export default function TermsOfServicePage() {
               using this site, you agree to these terms.
             </p>
           </section>
-
           <section>
             <h2 className="font-semibold mb-1.5 text-slate-900">
               2. Project discussions
@@ -158,7 +200,6 @@ export default function TermsOfServicePage() {
               commercial terms in writing.
             </p>
           </section>
-
           <section>
             <h2 className="font-semibold mb-1.5 text-slate-900">
               3. Proposals & agreements
@@ -170,7 +211,6 @@ export default function TermsOfServicePage() {
               relevant project.
             </p>
           </section>
-
           <section>
             <h2 className="font-semibold mb-1.5 text-slate-900">
               4. Intellectual property
@@ -182,7 +222,6 @@ export default function TermsOfServicePage() {
               Studios.
             </p>
           </section>
-
           <section>
             <h2 className="font-semibold mb-1.5 text-slate-900">
               5. Use of work in portfolio
@@ -193,7 +232,6 @@ export default function TermsOfServicePage() {
               arrangement is agreed.
             </p>
           </section>
-
           <section>
             <h2 className="font-semibold mb-1.5 text-slate-900">
               6. Limitation of liability
@@ -205,7 +243,6 @@ export default function TermsOfServicePage() {
               losses arising from the use of our work or this website.
             </p>
           </section>
-
           <section>
             <h2 className="font-semibold mb-1.5 text-slate-900">
               7. Changes to these terms
@@ -216,18 +253,19 @@ export default function TermsOfServicePage() {
               you accept the updated version.
             </p>
           </section>
-
           <section>
             <h2 className="font-semibold mb-1.5 text-slate-900">
               8. Contact
             </h2>
             <p>
               If you have questions about these terms or a specific project,
-              reach us at <span className="font-medium">tvlstudioz@gmail.com</span>.
+              reach us at{" "}
+              <span className="font-medium">tvlstudioz@gmail.com</span>.
             </p>
           </section>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
