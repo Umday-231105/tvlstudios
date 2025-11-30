@@ -55,6 +55,7 @@ const Navbar = () => {
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        
         {/* Logo */}
         <a href="/" className="flex items-center gap-2 group">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 via-emerald-400 to-teal-300 flex items-center justify-center shadow-sm shadow-sky-500/40">
@@ -67,17 +68,14 @@ const Navbar = () => {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6 text-[13px] text-slate-600">
-          <a href="#about" className="hover:text-slate-900 transition-colors">
-            About
-          </a>
-          <a href="#services" className="hover:text-slate-900 transition-colors">
-            Services
-          </a>
-          <a href="#process" className="hover:text-slate-900 transition-colors">
-            Process
-          </a>
-          <a href="#work" className="hover:text-slate-900 transition-colors">
-            Work
+          <a href="#about" className="hover:text-slate-900 transition-colors">About</a>
+          <a href="#services" className="hover:text-slate-900 transition-colors">Services</a>
+          <a href="#process" className="hover:text-slate-900 transition-colors">Process</a>
+          <a href="#work" className="hover:text-slate-900 transition-colors">Work</a>
+
+          {/* ⭐ Assistant Link */}
+          <a href="/assistant" className="hover:text-slate-900 transition-colors">
+            Assistant
           </a>
 
           <button
@@ -97,6 +95,7 @@ const Navbar = () => {
         </button>
       </div>
 
+      {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-slate-100 bg-white">
           <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-3 text-sm text-slate-800">
@@ -110,6 +109,16 @@ const Navbar = () => {
                 {id.charAt(0).toUpperCase() + id.slice(1)}
               </a>
             ))}
+
+            {/* ⭐ Assistant Link (mobile) */}
+            <a
+              href="/assistant"
+              onClick={() => setMobileOpen(false)}
+              className="py-1"
+            >
+              Assistant
+            </a>
+
             <button
               onClick={() => {
                 setMobileOpen(false);
