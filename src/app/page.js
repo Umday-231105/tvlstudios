@@ -99,38 +99,34 @@ const Navbar = () => {
         </button>
       </div>
 
-      {mobileOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white">
-          <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-3 text-sm text-slate-800">
-            {["about", "services", "process", "work"].map((id) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                onClick={() => setMobileOpen(false)}
-                className="py-1"
-              >
-                {id.charAt(0).toUpperCase() + id.slice(1)}
-              </a>
-            ))}
-            {/* Assistant link for mobile */}
-            <a
-              href="/assistant"
-              onClick={() => setMobileOpen(false)}
-              className="py-1"
-            >
-              Assistant
-            </a>
-            <button
-              onClick={() => {
-                setMobileOpen(false);
-                window.location.href = "/start-project";
-              }}
-              className="mt-2 px-4 py-2 rounded-full bg-sky-600 text-white text-xs font-semibold"
-            >
-              Start a project
-            </button>
-          </div>
-        </div>
+     {/* Desktop nav */}
+<div className="hidden md:flex items-center gap-6 text-[13px] text-slate-600">
+  <a href="#about" className="hover:text-slate-900 transition-colors">
+    About
+  </a>
+  <a href="#services" className="hover:text-slate-900 transition-colors">
+    Services
+  </a>
+  <a href="#process" className="hover:text-slate-900 transition-colors">
+    Process
+  </a>
+  <a href="#work" className="hover:text-slate-900 transition-colors">
+    Work
+  </a>
+
+  {/* Assistant link */}
+  <a href="/assistant" className="hover:text-sky-600 transition">
+    Assistant
+  </a>
+
+  <button
+    onClick={() => (window.location.href = "/start-project")}
+    className="ml-2 px-4 py-2 rounded-full bg-sky-600 text-white text-xs font-semibold hover:bg-sky-500 transition-all shadow-sm shadow-sky-500/40"
+  >
+    Start a project
+  </button>
+</div>
+
       )}
     </nav>
   );
