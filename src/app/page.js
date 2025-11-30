@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
@@ -64,10 +63,6 @@ const Navbar = () => {
             TVL Studios
           </span>
         </a>
-        <a href="/assistant" className="hover:text-blue-600 transition">
-  Assistant
-</a>
-
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6 text-[13px] text-slate-600">
@@ -83,7 +78,10 @@ const Navbar = () => {
           <a href="#work" className="hover:text-slate-900 transition-colors">
             Work
           </a>
-
+          {/* Assistant link */}
+          <a href="/assistant" className="hover:text-blue-600 transition">
+            Assistant
+          </a>
           <button
             onClick={() => (window.location.href = "/start-project")}
             className="ml-2 px-4 py-2 rounded-full bg-sky-600 text-white text-xs font-semibold hover:bg-sky-500 transition-all shadow-sm shadow-sky-500/40"
@@ -114,10 +112,14 @@ const Navbar = () => {
                 {id.charAt(0).toUpperCase() + id.slice(1)}
               </a>
             ))}
-     <a href="/assistant" onClick={() => setMobileMenuOpen(false)}>
-  Assistant
-</a>
-
+            {/* Assistant link for mobile */}
+            <a
+              href="/assistant"
+              onClick={() => setMobileOpen(false)}
+              className="py-1"
+            >
+              Assistant
+            </a>
             <button
               onClick={() => {
                 setMobileOpen(false);
@@ -142,7 +144,6 @@ export default function App() {
       <div className="pointer-events-none fixed inset-y-0 left-0 w-[420px] -z-10">
         <div className="w-full h-full bg-gradient-to-br from-sky-500/40 via-sky-500/10 to-transparent blur-[120px]" />
       </div>
-
       <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
 
@@ -160,7 +161,6 @@ export default function App() {
                       <span>Design, product & web for modern teams</span>
                     </div>
                   </Reveal>
-
                   <Reveal delay={0.1}>
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] font-semibold tracking-tight leading-tight mb-4">
                       Calm, high‑trust
@@ -169,7 +169,6 @@ export default function App() {
                       </span>
                     </h1>
                   </Reveal>
-
                   <Reveal delay={0.16}>
                     <p className="text-sm md:text-[15px] text-slate-200/90 max-w-xl mb-6">
                       TVL Studios works with product teams to design and ship
@@ -177,7 +176,6 @@ export default function App() {
                       clear, modern and trustworthy—without unnecessary noise.
                     </p>
                   </Reveal>
-
                   <Reveal delay={0.22}>
                     <div className="flex flex-wrap items-center gap-3 mb-6">
                       <button
@@ -201,7 +199,6 @@ export default function App() {
                       </button>
                     </div>
                   </Reveal>
-
                   <Reveal delay={0.28}>
                     <div className="flex flex-wrap items-center gap-4 text-[11px] text-slate-300">
                       <div className="flex items-center gap-2">
@@ -232,7 +229,6 @@ export default function App() {
                           Studio preview
                         </span>
                       </div>
-
                       <div className="aspect-video bg-gradient-to-br from-sky-500/50 via-slate-900 to-emerald-500/40 relative overflow-hidden">
                         {/* building / interface blocks */}
                         <div className="absolute inset-0 px-6 py-5 flex flex-col gap-4">
@@ -256,7 +252,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Info cards row under hero (like CS & AI / Bangalore / etc) */}
+            {/* Info cards row under hero */}
             <div className="-mt-8 md:-mt-10 relative z-10">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Reveal delay={0.05}>
@@ -277,7 +273,6 @@ export default function App() {
                     </p>
                   </div>
                 </Reveal>
-
                 <Reveal delay={0.1}>
                   <div className="rounded-2xl bg-white shadow-lg shadow-slate-200/80 border border-slate-100 p-4">
                     <div className="flex items-center gap-2 mb-2">
@@ -296,7 +291,6 @@ export default function App() {
                     </p>
                   </div>
                 </Reveal>
-
                 <Reveal delay={0.15}>
                   <div className="rounded-2xl bg-white shadow-lg shadow-slate-200/80 border border-slate-100 p-4">
                     <div className="flex items-center gap-2 mb-2">
@@ -315,7 +309,6 @@ export default function App() {
                     </p>
                   </div>
                 </Reveal>
-
                 <Reveal delay={0.2}>
                   <div className="rounded-2xl bg-white shadow-lg shadow-slate-200/80 border border-slate-100 p-4">
                     <div className="flex items-center gap-2 mb-2">
@@ -356,9 +349,9 @@ export default function App() {
                       A small studio with product thinking built in.
                     </h2>
                     <p className="text-sm text-slate-600">
-                      We operate like an embedded product and brand team. Design,
-                      content and build sit together so the work feels coherent
-                      and moves forward on a predictable cadence.
+                      We operate like an embedded product and brand team.
+                      Design, content and build sit together so the work feels
+                      coherent and moves forward on a predictable cadence.
                     </p>
                   </div>
                   <div className="md:w-1/2 grid grid-cols-2 gap-4 text-xs text-slate-800">
@@ -413,7 +406,6 @@ export default function App() {
                 </p>
               </div>
             </Reveal>
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
               <Reveal delay={0.05}>
                 <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5 h-full flex flex-col justify-between hover:-translate-y-1 hover:shadow-md hover:shadow-slate-200/90 transition-transform duration-300">
@@ -434,7 +426,6 @@ export default function App() {
                   </p>
                 </div>
               </Reveal>
-
               <Reveal delay={0.1}>
                 <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5 h-full flex flex-col justify-between hover:-translate-y-1 hover:shadow-md hover:shadow-emerald-100/80 transition-transform duration-300">
                   <div>
@@ -455,7 +446,6 @@ export default function App() {
                   </p>
                 </div>
               </Reveal>
-
               <Reveal delay={0.15}>
                 <div className="rounded-2xl border border-amber-100 bg-amber-50 p-5 h-full flex flex-col justify-between hover:-translate-y-1 hover:shadow-md hover:shadow-amber-100/80 transition-transform duration-300">
                   <div>
@@ -502,7 +492,6 @@ export default function App() {
                 </p>
               </div>
             </Reveal>
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
               {[
                 {
@@ -559,7 +548,6 @@ export default function App() {
                 </p>
               </div>
             </Reveal>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
               <Reveal delay={0.05}>
                 <div className="rounded-3xl border border-slate-100 bg-slate-50 overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/90 transition-transform duration-300">
@@ -577,7 +565,6 @@ export default function App() {
                   </div>
                 </div>
               </Reveal>
-
               <Reveal delay={0.1}>
                 <div className="rounded-3xl border border-slate-100 bg-slate-50 overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/90 transition-transform duration-300">
                   <div className="h-40 bg-gradient-to-br from-emerald-500/40 via-slate-900/80 to-amber-500/40" />
@@ -625,7 +612,6 @@ export default function App() {
                 </div>
               </div>
             </div>
-
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-[11px] text-slate-500 border-t border-slate-100 pt-4">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-sky-500 via-emerald-400 to-teal-300 flex items-center justify-center">
