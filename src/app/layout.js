@@ -1,5 +1,6 @@
 import "./globals.css";
-import AssistantWidget from "../components/AssistantWidget";
+import AssistantWidget from "./components/AssistantWidget";
+
 
 export const metadata = {
   title: "TVL Studios",
