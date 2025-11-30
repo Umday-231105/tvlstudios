@@ -34,7 +34,6 @@ const Navbar = () => {
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
-    window.dispatchEvent(new Event("tvl-open-assistant"));
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
