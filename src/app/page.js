@@ -14,17 +14,15 @@ import {
   ArrowRight,
   CheckCircle2,
   Mail,
+  MapPin,
+  Sparkles,
 } from "lucide-react";
 
-// ----------------------
-// Smooth animation curve
-// ----------------------
 const SMOOTH_TRANSITION = {
   duration: 0.8,
   ease: [0.25, 0.1, 0.25, 1],
 };
 
-// --------- Helpers ----------
 const Reveal = ({ children, delay = 0, className = "" }) => (
   <motion.div
     initial={{ opacity: 0, y: 16 }}
@@ -37,10 +35,10 @@ const Reveal = ({ children, delay = 0, className = "" }) => (
   </motion.div>
 );
 
-// --------- Navbar ----------
+// ---------------- NAVBAR ----------------
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 40);
@@ -50,63 +48,63 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? "bg-slate-950/95 border-b border-slate-800 backdrop-blur-xl"
-          : "bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-transparent"
+          ? "bg-white shadow-md shadow-slate-200/70"
+          : "bg-white/95 backdrop-blur-sm border-b border-slate-100"
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <a href="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-sky-500 via-emerald-400 to-teal-300 flex items-center justify-center shadow-md shadow-sky-500/30 border border-slate-900">
-            <span className="text-slate-950 font-semibold text-lg">T</span>
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 via-emerald-400 to-teal-300 flex items-center justify-center shadow-sm shadow-sky-500/40">
+            <span className="text-slate-900 font-semibold text-lg">T</span>
           </div>
-          <span className="font-medium text-sm tracking-[0.18em] uppercase text-slate-300 group-hover:text-white">
+          <span className="font-semibold text-sm tracking-[0.18em] uppercase text-slate-800 group-hover:text-slate-900">
             TVL Studios
           </span>
         </a>
 
-        {/* desktop nav */}
-        <div className="hidden md:flex items-center gap-4 text-xs text-slate-300">
-          <a href="#about" className="hover:text-white transition-colors">
+        {/* Desktop nav */}
+        <div className="hidden md:flex items-center gap-6 text-[13px] text-slate-600">
+          <a href="#about" className="hover:text-slate-900 transition-colors">
             About
           </a>
-          <a href="#services" className="hover:text-white transition-colors">
+          <a href="#services" className="hover:text-slate-900 transition-colors">
             Services
           </a>
-          <a href="#process" className="hover:text-white transition-colors">
+          <a href="#process" className="hover:text-slate-900 transition-colors">
             Process
           </a>
-          <a href="#work" className="hover:text-white transition-colors">
+          <a href="#work" className="hover:text-slate-900 transition-colors">
             Work
           </a>
 
           <button
             onClick={() => (window.location.href = "/start-project")}
-            className="ml-2 px-4 py-2 rounded-full bg-sky-500 text-slate-950 text-xs font-semibold hover:bg-sky-400 transition-all shadow-sm shadow-sky-500/60"
+            className="ml-2 px-4 py-2 rounded-full bg-sky-600 text-white text-xs font-semibold hover:bg-sky-500 transition-all shadow-sm shadow-sky-500/40"
           >
             Start a project
           </button>
         </div>
 
-        {/* mobile buttons */}
+        {/* Mobile menu button */}
         <button
-          className="md:hidden text-slate-100"
-          onClick={() => setMobileMenuOpen((v) => !v)}
+          className="md:hidden text-slate-800"
+          onClick={() => setMobileOpen((v) => !v)}
         >
-          {mobileMenuOpen ? <X /> : <Menu />}
+          {mobileOpen ? <X /> : <Menu />}
         </button>
       </div>
 
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-800 bg-slate-950/95 backdrop-blur-xl">
-          <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-3 text-sm text-slate-100">
+      {mobileOpen && (
+        <div className="md:hidden border-t border-slate-100 bg-white">
+          <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-3 text-sm text-slate-800">
             {["about", "services", "process", "work"].map((id) => (
               <a
                 key={id}
                 href={`#${id}`}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => setMobileOpen(false)}
                 className="py-1"
               >
                 {id.charAt(0).toUpperCase() + id.slice(1)}
@@ -114,10 +112,10 @@ const Navbar = () => {
             ))}
             <button
               onClick={() => {
-                setMobileMenuOpen(false);
+                setMobileOpen(false);
                 window.location.href = "/start-project";
               }}
-              className="mt-2 px-4 py-2 rounded-full bg-sky-500 text-slate-950 text-xs font-semibold"
+              className="mt-2 px-4 py-2 rounded-full bg-sky-600 text-white text-xs font-semibold"
             >
               Start a project
             </button>
@@ -128,50 +126,47 @@ const Navbar = () => {
   );
 };
 
-// -------------
-// Main App
-// -------------
+// ---------------- MAIN PAGE ----------------
 export default function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 text-slate-50 relative overflow-hidden">
-      {/* subtle radial glow in background */}
-      <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute -top-40 -left-40 w-[420px] h-[420px] rounded-full bg-sky-500/20 blur-[120px]" />
-        <div className="absolute top-20 right-[-160px] w-[420px] h-[420px] rounded-full bg-emerald-500/20 blur-[120px]" />
-        <div className="absolute bottom-[-200px] left-1/3 w-[520px] h-[520px] rounded-full bg-slate-700/30 blur-[140px]" />
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      {/* subtle blue glow on left like Scaler */}
+      <div className="pointer-events-none fixed inset-y-0 left-0 w-[420px] -z-10">
+        <div className="w-full h-full bg-gradient-to-br from-sky-500/40 via-sky-500/10 to-transparent blur-[120px]" />
       </div>
 
       <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
 
         {/* HERO */}
-        <main className="w-full pt-24 md:pt-28 pb-16">
+        <main className="pt-24 md:pt-28 pb-14">
           <section className="max-w-6xl mx-auto px-4">
-            <div className="rounded-[32px] border border-slate-800 bg-slate-950/70 backdrop-blur-2xl px-6 md:px-10 py-10 md:py-14 shadow-[0_22px_90px_rgba(15,23,42,0.9)]">
-              <div className="flex flex-col md:flex-row items-center gap-10">
-                {/* Left text */}
+            {/* Dark hero card */}
+            <div className="rounded-[32px] bg-slate-950 text-slate-50 px-6 md:px-10 py-10 md:py-14 shadow-[0_26px_80px_rgba(15,23,42,0.85)]">
+              <div className="flex flex-col lg:flex-row gap-10 items-center">
+                {/* Left content */}
                 <div className="flex-1">
                   <Reveal delay={0.05}>
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/40 text-[11px] uppercase tracking-[0.2em] text-sky-200 mb-6">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 border border-slate-700 text-[11px] uppercase tracking-[0.2em] text-slate-300 mb-6">
+                      <Sparkles className="w-3 h-3 text-sky-400" />
                       <span>Design, product & web for modern teams</span>
                     </div>
                   </Reveal>
 
                   <Reveal delay={0.1}>
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-4">
-                      Build serious
-                      <span className="block text-sky-400 mt-1">
-                        software stories.
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[44px] font-semibold tracking-tight leading-tight mb-4">
+                      Calm, high‑trust
+                      <span className="block text-sky-400">
+                        digital experiences.
                       </span>
                     </h1>
                   </Reveal>
 
                   <Reveal delay={0.16}>
-                    <p className="text-sm md:text-base text-slate-200/85 max-w-xl mb-6">
-                      TVL Studios partners with teams to design and ship product
-                      pages, marketing sites and brand systems with the same
-                      polish you expect from top tech companies.
+                    <p className="text-sm md:text-[15px] text-slate-200/90 max-w-xl mb-6">
+                      TVL Studios works with product teams to design and ship
+                      marketing sites, product pages and brand systems that feel
+                      clear, modern and trustworthy—without unnecessary noise.
                     </p>
                   </Reveal>
 
@@ -181,7 +176,7 @@ export default function App() {
                         onClick={() =>
                           (window.location.href = "/start-project")
                         }
-                        className="px-5 py-2.5 rounded-full bg-sky-500 text-slate-950 text-xs md:text-sm font-semibold flex items-center gap-1.5 hover:bg-sky-400 hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-sm shadow-sky-500/60"
+                        className="px-5 py-2.5 rounded-full bg-sky-500 text-white text-xs md:text-sm font-semibold flex items-center gap-1.5 hover:bg-sky-400 hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-sm shadow-sky-500/60"
                       >
                         Start a project
                         <ArrowRight className="w-4 h-4" />
@@ -191,7 +186,7 @@ export default function App() {
                           const el = document.getElementById("work");
                           if (el) el.scrollIntoView({ behavior: "smooth" });
                         }}
-                        className="px-4 py-2 rounded-full border border-slate-700 bg-slate-900/70 text-xs md:text-sm text-slate-50 flex items-center gap-1.5 hover:bg-slate-800 transition-all"
+                        className="px-4 py-2 rounded-full bg-transparent border border-slate-700 text-xs md:text-sm text-slate-50 flex items-center gap-1.5 hover:bg-slate-900 transition-all"
                       >
                         View work
                         <Play className="w-3 h-3" />
@@ -200,82 +195,50 @@ export default function App() {
                   </Reveal>
 
                   <Reveal delay={0.28}>
-                    <div className="flex flex-wrap items-center gap-4 text-[11px] text-slate-300/85">
+                    <div className="flex flex-wrap items-center gap-4 text-[11px] text-slate-300">
                       <div className="flex items-center gap-2">
-                        <Cpu className="w-3.5 h-3.5 text-emerald-400" />
+                        <Cpu className="w-3.5 h-3.5 text-sky-300" />
                         <span>Product & marketing sites</span>
                       </div>
-                      <span className="w-px h-3 bg-slate-600 hidden sm:inline-block" />
+                      <span className="hidden sm:inline-block w-px h-3 bg-slate-600" />
                       <div className="flex items-center gap-2">
-                        <Globe className="w-3.5 h-3.5 text-sky-400" />
-                        <span>Remote, async-friendly collaboration</span>
+                        <Globe className="w-3.5 h-3.5 text-emerald-300" />
+                        <span>Remote, async‑friendly collaboration</span>
                       </div>
                     </div>
                   </Reveal>
                 </div>
 
-                {/* Right card: engagements */}
+                {/* Right visual (image / video style) */}
                 <div className="flex-1 max-w-md w-full">
                   <Reveal delay={0.18}>
-                    <div className="rounded-[28px] border border-slate-800 bg-slate-950/80 backdrop-blur-2xl px-5 py-6 shadow-[0_18px_70px_rgba(15,23,42,0.85)]">
-                      <div className="mb-4">
-                        <p className="text-[11px] text-slate-400 uppercase tracking-[0.2em] mb-1">
-                          Engagements
-                        </p>
-                        <h2 className="text-sm font-medium text-slate-50">
-                          One studio for design, build and content.
-                        </h2>
+                    <div className="relative w-full rounded-3xl overflow-hidden bg-slate-900 border border-slate-700 shadow-[0_18px_60px_rgba(15,23,42,0.9)]">
+                      {/* top "video" bar */}
+                      <div className="h-9 px-4 flex items-center justify-between border-b border-slate-800 bg-slate-950/80">
+                        <div className="flex gap-1.5">
+                          <span className="w-2.5 h-2.5 rounded-full bg-rose-400" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-amber-300" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                        </div>
+                        <span className="text-[11px] text-slate-400">
+                          Studio preview
+                        </span>
                       </div>
 
-                      <div className="space-y-3 text-xs">
-                        <div className="rounded-2xl bg-slate-950 border border-slate-700 px-4 py-3 hover:bg-slate-900 transition-colors">
-                          <div className="flex items-center gap-3">
-                            <div className="w-7 h-7 rounded-xl bg-sky-500/20 flex items-center justify-center">
-                              <MonitorPlay className="w-4 h-4 text-sky-300" />
-                            </div>
-                            <div>
-                              <p className="font-medium text-slate-50">
-                                Websites & product pages
-                              </p>
-                              <p className="text-[11px] text-slate-300">
-                                Launch and marketing sites with strong story,
-                                hierarchy and performance.
-                              </p>
-                            </div>
+                      <div className="aspect-video bg-gradient-to-br from-sky-500/50 via-slate-900 to-emerald-500/40 relative overflow-hidden">
+                        {/* building / interface blocks */}
+                        <div className="absolute inset-0 px-6 py-5 flex flex-col gap-4">
+                          <div className="flex gap-3">
+                            <div className="w-24 h-16 rounded-xl bg-slate-900/80 border border-slate-700" />
+                            <div className="flex-1 h-16 rounded-xl bg-slate-900/80 border border-slate-700" />
                           </div>
-                        </div>
-
-                        <div className="rounded-2xl bg-slate-950 border border-emerald-500/40 px-4 py-3 hover:bg-slate-900 transition-colors">
-                          <div className="flex items-center gap-3">
-                            <div className="w-7 h-7 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                              <Cpu className="w-4 h-4 text-emerald-200" />
-                            </div>
-                            <div>
-                              <p className="font-medium text-slate-50">
-                                AI-aware content systems
-                              </p>
-                              <p className="text-[11px] text-slate-300">
-                                Structures, prompts and templates to keep
-                                content on-brand at speed.
-                              </p>
-                            </div>
+                          <div className="flex gap-3">
+                            <div className="flex-1 h-20 rounded-xl bg-slate-900/80 border border-slate-700" />
+                            <div className="w-24 h-20 rounded-xl bg-sky-500/30 border border-sky-300/60" />
                           </div>
-                        </div>
-
-                        <div className="rounded-2xl bg-slate-950 border border-amber-400/60 px-4 py-3 hover:bg-slate-900 transition-colors">
-                          <div className="flex items-center gap-3">
-                            <div className="w-7 h-7 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                              <Aperture className="w-4 h-4 text-amber-200" />
-                            </div>
-                            <div>
-                              <p className="font-medium text-slate-50">
-                                Visual identity
-                              </p>
-                              <p className="text-[11px] text-slate-300">
-                                Type, color and component systems for product
-                                UI, web and decks.
-                              </p>
-                            </div>
+                          <div className="flex gap-3 mt-auto">
+                            <div className="w-20 h-3 rounded-full bg-slate-700/70" />
+                            <div className="w-14 h-3 rounded-full bg-slate-700/50" />
                           </div>
                         </div>
                       </div>
@@ -284,55 +247,134 @@ export default function App() {
                 </div>
               </div>
             </div>
+
+            {/* Info cards row under hero (like CS & AI / Bangalore / etc) */}
+            <div className="-mt-8 md:-mt-10 relative z-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Reveal delay={0.05}>
+                  <div className="rounded-2xl bg-white shadow-lg shadow-slate-200/80 border border-slate-100 p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center">
+                        <MonitorPlay className="w-4 h-4 text-sky-600" />
+                      </div>
+                      <span className="text-xs font-semibold text-sky-700">
+                        Web & Product
+                      </span>
+                    </div>
+                    <p className="text-[13px] font-medium text-slate-900 mb-1">
+                      Marketing & product pages
+                    </p>
+                    <p className="text-[11px] text-slate-500">
+                      Clear, conversion‑ready sites for launches & updates.
+                    </p>
+                  </div>
+                </Reveal>
+
+                <Reveal delay={0.1}>
+                  <div className="rounded-2xl bg-white shadow-lg shadow-slate-200/80 border border-slate-100 p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                        <Cpu className="w-4 h-4 text-emerald-600" />
+                      </div>
+                      <span className="text-xs font-semibold text-emerald-700">
+                        AI & Systems
+                      </span>
+                    </div>
+                    <p className="text-[13px] font-medium text-slate-900 mb-1">
+                      AI‑aware content flows
+                    </p>
+                    <p className="text-[11px] text-slate-500">
+                      Structures, prompts and templates that stay on‑brand.
+                    </p>
+                  </div>
+                </Reveal>
+
+                <Reveal delay={0.15}>
+                  <div className="rounded-2xl bg-white shadow-lg shadow-slate-200/80 border border-slate-100 p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+                        <Aperture className="w-4 h-4 text-amber-600" />
+                      </div>
+                      <span className="text-xs font-semibold text-amber-700">
+                        Visual Identity
+                      </span>
+                    </div>
+                    <p className="text-[13px] font-medium text-slate-900 mb-1">
+                      Brand & motion systems
+                    </p>
+                    <p className="text-[11px] text-slate-500">
+                      Identity that works across product, web, decks & social.
+                    </p>
+                  </div>
+                </Reveal>
+
+                <Reveal delay={0.2}>
+                  <div className="rounded-2xl bg-white shadow-lg shadow-slate-200/80 border border-slate-100 p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center">
+                        <MapPin className="w-4 h-4 text-slate-700" />
+                      </div>
+                      <span className="text-xs font-semibold text-slate-700">
+                        Remote‑first
+                      </span>
+                    </div>
+                    <p className="text-[13px] font-medium text-slate-900 mb-1">
+                      Based in India, working globally
+                    </p>
+                    <p className="text-[11px] text-slate-500">
+                      Async‑friendly, clear documentation and ownership.
+                    </p>
+                  </div>
+                </Reveal>
+              </div>
+            </div>
           </section>
         </main>
 
-        {/* STUDIO / ABOUT */}
+        {/* ABOUT */}
         <section
           id="about"
-          className="w-full border-t border-slate-800 bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 py-14"
+          className="w-full border-t border-slate-100 bg-slate-50 py-16"
         >
           <div className="max-w-6xl mx-auto px-4">
             <Reveal>
-              <div className="rounded-[32px] bg-slate-950/80 border border-slate-800 backdrop-blur-xl px-6 md:px-10 py-10">
+              <div className="rounded-3xl bg-white border border-slate-100 shadow-sm shadow-slate-200/60 px-6 md:px-10 py-10">
                 <div className="flex flex-col md:flex-row gap-10 items-start">
                   <div className="md:w-1/2">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400 mb-3">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-slate-500 mb-3">
                       Studio
                     </p>
-                    <h2 className="text-xl md:text-2xl font-semibold mb-3 text-slate-50">
-                      A small team focused on long-term quality.
+                    <h2 className="text-xl md:text-2xl font-semibold mb-3 text-slate-900">
+                      A small studio with product thinking built in.
                     </h2>
-                    <p className="text-sm text-slate-200/85">
-                      We work like an embedded product and brand team:
-                      strategy, UX, UI, build and content sit together so the
-                      work feels coherent and keeps moving forward.
+                    <p className="text-sm text-slate-600">
+                      We operate like an embedded product and brand team. Design,
+                      content and build sit together so the work feels coherent
+                      and moves forward on a predictable cadence.
                     </p>
                   </div>
-                  <div className="md:w-1/2 grid grid-cols-2 gap-4 text-xs text-slate-50">
-                    <div className="rounded-2xl border border-slate-700 bg-slate-900/90 p-4">
-                      <p className="text-[11px] text-sky-300 mb-1">
+                  <div className="md:w-1/2 grid grid-cols-2 gap-4 text-xs text-slate-800">
+                    <div className="rounded-2xl border border-slate-100 bg-sky-50 p-4">
+                      <p className="text-[11px] text-sky-700 mb-1">
                         Focus areas
                       </p>
                       <p>Product, marketing, brand and simple internal tools.</p>
                     </div>
-                    <div className="rounded-2xl border border-slate-700 bg-slate-900/90 p-4">
-                      <p className="text-[11px] text-sky-300 mb-1">
+                    <div className="rounded-2xl border border-slate-100 bg-emerald-50 p-4">
+                      <p className="text-[11px] text-emerald-700 mb-1">
                         Ideal projects
                       </p>
-                      <p>Launches, redesigns, repositioning and new bets.</p>
+                      <p>First launches, repositioning, new product bets.</p>
                     </div>
-                    <div className="rounded-2xl border border-slate-700 bg-slate-900/90 p-4">
-                      <p className="text-[11px] text-slate-400 mb-1">
+                    <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                      <p className="text-[11px] text-slate-500 mb-1">
                         Collaboration
                       </p>
-                      <p>Clear owners, regular check-ins, async-friendly.</p>
+                      <p>Clear owners, short check‑ins, async docs.</p>
                     </div>
-                    <div className="rounded-2xl border border-slate-700 bg-slate-900/90 p-4">
-                      <p className="text-[11px] text-slate-400 mb-1">
-                        Stack
-                      </p>
-                      <p>Figma, Next.js, Tailwind, motion tools and AI support.</p>
+                    <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                      <p className="text-[11px] text-slate-500 mb-1">Stack</p>
+                      <p>Figma, Next.js, Tailwind, motion and AI‑powered tools.</p>
                     </div>
                   </div>
                 </div>
@@ -344,82 +386,83 @@ export default function App() {
         {/* SERVICES */}
         <section
           id="services"
-          className="w-full border-t border-slate-800 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 py-16"
+          className="w-full border-t border-slate-100 bg-white py-16"
         >
           <div className="max-w-6xl mx-auto px-4">
             <Reveal>
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.2em] text-sky-300 mb-2">
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-slate-500 mb-2">
                     Services
                   </p>
-                  <h2 className="text-xl md:text-2xl font-semibold text-slate-50">
-                    From first launch to steady iteration.
+                  <h2 className="text-xl md:text-2xl font-semibold text-slate-900">
+                    From first launch to ongoing iteration.
                   </h2>
                 </div>
-                <p className="text-xs text-slate-300 md:max-w-xs">
+                <p className="text-xs text-slate-600 md:max-w-xs">
                   We can own the full journey—structure, design, build and
-                  content—or work alongside your in-house team.
+                  content—or plug into your existing product & engineering teams.
                 </p>
               </div>
             </Reveal>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
               <Reveal delay={0.05}>
-                <div className="rounded-2xl border border-slate-800 bg-slate-950/80 backdrop-blur-xl p-5 h-full flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300 shadow-sm shadow-slate-900/80">
+                <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5 h-full flex flex-col justify-between hover:-translate-y-1 hover:shadow-md hover:shadow-slate-200/90 transition-transform duration-300">
                   <div>
-                    <div className="w-8 h-8 rounded-xl bg-sky-500/20 flex items-center justify-center mb-3">
-                      <MonitorPlay className="w-4 h-4 text-sky-300" />
+                    <div className="w-8 h-8 rounded-xl bg-sky-100 flex items-center justify-center mb-3">
+                      <MonitorPlay className="w-4 h-4 text-sky-600" />
                     </div>
-                    <h3 className="font-semibold mb-2 text-slate-50">
+                    <h3 className="font-semibold mb-2 text-slate-900">
                       Websites & product pages
                     </h3>
-                    <p className="text-slate-200/85 text-xs">
-                      Launch and marketing sites with clear narrative, strong
-                      hierarchy and measured motion.
+                    <p className="text-slate-600 text-xs">
+                      Multi‑section marketing sites, launch pages and product
+                      detail pages with clear hierarchy and strong messaging.
                     </p>
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-4">
+                  <p className="text-[11px] text-slate-500 mt-4">
                     Tech: Next.js, React, Tailwind, motion
                   </p>
                 </div>
               </Reveal>
 
               <Reveal delay={0.1}>
-                <div className="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 backdrop-blur-xl p-5 h-full flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300 shadow-sm shadow-emerald-500/30">
+                <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5 h-full flex flex-col justify-between hover:-translate-y-1 hover:shadow-md hover:shadow-emerald-100/80 transition-transform duration-300">
                   <div>
-                    <div className="w-8 h-8 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-3">
-                      <Cpu className="w-4 h-4 text-emerald-200" />
+                    <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center mb-3">
+                      <Cpu className="w-4 h-4 text-emerald-700" />
                     </div>
-                    <h3 className="font-semibold mb-2 text-slate-50">
-                      AI-aware content & systems
+                    <h3 className="font-semibold mb-2 text-slate-900">
+                      AI‑aware content & systems
                     </h3>
-                    <p className="text-slate-100 text-xs">
+                    <p className="text-slate-700 text-xs">
                       Content structures, prompts and templates that help your
-                      team move faster without losing voice.
+                      team produce high‑quality work faster while staying
+                      on‑brand.
                     </p>
                   </div>
-                  <p className="text-[11px] text-emerald-100 mt-4">
+                  <p className="text-[11px] text-emerald-700 mt-4">
                     Output: docs, templates, messaging frameworks
                   </p>
                 </div>
               </Reveal>
 
               <Reveal delay={0.15}>
-                <div className="rounded-2xl border border-amber-400/60 bg-amber-500/10 backdrop-blur-xl p-5 h-full flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300 shadow-sm shadow-amber-500/30">
+                <div className="rounded-2xl border border-amber-100 bg-amber-50 p-5 h-full flex flex-col justify-between hover:-translate-y-1 hover:shadow-md hover:shadow-amber-100/80 transition-transform duration-300">
                   <div>
-                    <div className="w-8 h-8 rounded-xl bg-amber-500/20 flex items-center justify-center mb-3">
-                      <Aperture className="w-4 h-4 text-amber-200" />
+                    <div className="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center mb-3">
+                      <Aperture className="w-4 h-4 text-amber-700" />
                     </div>
-                    <h3 className="font-semibold mb-2 text-slate-50">
+                    <h3 className="font-semibold mb-2 text-slate-900">
                       Visual identity & graphics
                     </h3>
-                    <p className="text-slate-100 text-xs">
+                    <p className="text-slate-700 text-xs">
                       Identity foundations and key visuals that scale across
-                      product UI, web, decks and social.
+                      product UI, web, decks and social channels.
                     </p>
                   </div>
-                  <p className="text-[11px] text-amber-100 mt-4">
+                  <p className="text-[11px] text-amber-700 mt-4">
                     Tools: Figma, Adobe, motion tools
                   </p>
                 </div>
@@ -431,22 +474,23 @@ export default function App() {
         {/* PROCESS */}
         <section
           id="process"
-          className="w-full border-t border-slate-800 bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 py-16"
+          className="w-full border-t border-slate-100 bg-slate-50 py-16"
         >
           <div className="max-w-6xl mx-auto px-4">
             <Reveal>
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400 mb-2">
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-slate-500 mb-2">
                     Process
                   </p>
-                  <h2 className="text-xl md:text-2xl font-semibold text-slate-50">
+                  <h2 className="text-xl md:text-2xl font-semibold text-slate-900">
                     Simple phases, clear checkpoints.
                   </h2>
                 </div>
-                <p className="text-xs text-slate-300 md:max-w-sm">
-                  Work moves in defined stages with room for feedback, without
-                  endless loops or ambiguity.
+                <p className="text-xs text-slate-600 md:max-w-sm">
+                  Work moves in defined stages with room for feedback, but
+                  without endless loops. You always know what we&apos;re doing
+                  and what&apos;s coming next.
                 </p>
               </div>
             </Reveal>
@@ -456,28 +500,28 @@ export default function App() {
                 {
                   num: "01",
                   title: "Discover & define",
-                  desc: "Intake, a short call if useful, and a concise spec capturing goals, constraints, audience and scope.",
+                  desc: "Structured intake, a short call if helpful, and a concise spec capturing goals, constraints, audience and scope.",
                 },
                 {
                   num: "02",
                   title: "Design, iterate & build",
-                  desc: "From structure to visuals to implementation, with feedback in context—not just static screens.",
+                  desc: "From structure to visuals to implementation, with feedback in context—not just static screens in a deck.",
                 },
                 {
                   num: "03",
                   title: "Launch & support",
-                  desc: "QA, documentation and handoff. Optional support for future iterations, new pages or flows.",
+                  desc: "QA, documentation and handoff. Optional support for future iterations, new pages or additional flows.",
                 },
               ].map((step, i) => (
                 <Reveal key={step.num} delay={0.05 * (i + 1)}>
-                  <div className="rounded-2xl border border-slate-800 bg-slate-950/85 backdrop-blur-xl p-5 hover:-translate-y-1 transition-transform duration-300">
-                    <p className="text-[11px] text-slate-400 mb-1">
+                  <div className="rounded-2xl border border-slate-100 bg-white p-5 hover:-translate-y-1 hover:shadow-md hover:shadow-slate-200/80 transition-transform duration-300">
+                    <p className="text-[11px] text-slate-500 mb-1">
                       {step.num}
                     </p>
-                    <h3 className="font-semibold text-slate-50 mb-2">
+                    <h3 className="font-semibold text-slate-900 mb-2">
                       {step.title}
                     </h3>
-                    <p className="text-xs text-slate-200/85">{step.desc}</p>
+                    <p className="text-xs text-slate-600">{step.desc}</p>
                   </div>
                 </Reveal>
               ))}
@@ -488,56 +532,56 @@ export default function App() {
         {/* WORK */}
         <section
           id="work"
-          className="w-full border-t border-slate-800 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 py-16"
+          className="w-full border-t border-slate-100 bg-white py-16"
         >
           <div className="max-w-6xl mx-auto px-4">
             <Reveal>
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400 mb-2">
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-slate-500 mb-2">
                     Work
                   </p>
-                  <h2 className="text-xl md:text-2xl font-semibold text-slate-50">
+                  <h2 className="text-xl md:text-2xl font-semibold text-slate-900">
                     Early examples & collaborations.
                   </h2>
                 </div>
-                <p className="text-xs text-slate-300 md:max-w-xs">
-                  This is where deeper case studies will live: Open Word War,
-                  Jibhi Homestead Cabins and future launches.
+                <p className="text-xs text-slate-600 md:max-w-xs">
+                  This is where deeper case studies will live—Open Word War,
+                  Jibhi Homestead Cabins and future product & brand work.
                 </p>
               </div>
             </Reveal>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
               <Reveal delay={0.05}>
-                <div className="rounded-3xl border border-slate-800 bg-slate-950/85 backdrop-blur-xl overflow-hidden flex flex-col hover:-translate-y-1 transition-transform duration-300 shadow-sm shadow-black/60">
-                  <div className="h-40 bg-gradient-to-br from-sky-500/35 via-slate-900 to-emerald-500/35" />
+                <div className="rounded-3xl border border-slate-100 bg-slate-50 overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/90 transition-transform duration-300">
+                  <div className="h-40 bg-gradient-to-br from-sky-500/40 via-slate-900/80 to-emerald-500/40" />
                   <div className="p-5">
-                    <p className="text-[11px] text-slate-400 mb-1">
+                    <p className="text-[11px] text-slate-500 mb-1">
                       Concept
                     </p>
-                    <h3 className="font-semibold text-slate-50">
+                    <h3 className="font-semibold text-slate-900">
                       Launch site for an AI product
                     </h3>
-                    <p className="mt-2 text-xs text-slate-200/85">
-                      A calm, conversion-focused marketing site for a new tool
-                      with a strong story and a single main action.
+                    <p className="mt-2 text-xs text-slate-600">
+                      A focused marketing site for a new tool with a clear story,
+                      tight visual system and a single primary action.
                     </p>
                   </div>
                 </div>
               </Reveal>
 
               <Reveal delay={0.1}>
-                <div className="rounded-3xl border border-slate-800 bg-slate-950/85 backdrop-blur-xl overflow-hidden flex flex-col hover:-translate-y-1 transition-transform duration-300 shadow-sm shadow-black/60">
-                  <div className="h-40 bg-gradient-to-br from-emerald-500/35 via-slate-900 to-amber-500/35" />
+                <div className="rounded-3xl border border-slate-100 bg-slate-50 overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/90 transition-transform duration-300">
+                  <div className="h-40 bg-gradient-to-br from-emerald-500/40 via-slate-900/80 to-amber-500/40" />
                   <div className="p-5">
-                    <p className="text-[11px] text-slate-400 mb-1">
+                    <p className="text-[11px] text-slate-500 mb-1">
                       Client
                     </p>
-                    <h3 className="font-semibold text-slate-50">
+                    <h3 className="font-semibold text-slate-900">
                       Visual system for a hospitality brand
                     </h3>
-                    <p className="mt-2 text-xs text-slate-200/85">
+                    <p className="mt-2 text-xs text-slate-600">
                       Layout, visuals and site structure for a stay that feels
                       warm and understated instead of loud and busy.
                     </p>
@@ -549,56 +593,57 @@ export default function App() {
         </section>
 
         {/* FOOTER */}
-        <footer className="w-full border-t border-slate-800 bg-slate-950 py-10">
+        <footer className="w-full border-t border-slate-100 bg-slate-50 py-10">
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
               <div>
-                <h2 className="text-lg md:text-xl font-semibold mb-2 text-slate-50">
+                <h2 className="text-lg md:text-xl font-semibold mb-2 text-slate-900">
                   Have something coming up?
                 </h2>
-                <p className="text-xs text-slate-300 max-w-md">
+                <p className="text-xs text-slate-600 max-w-md">
                   Share a brief overview—timing, context, goals. We&apos;ll
-                  respond with fit, a rough shape of the work and next steps.
+                  respond with fit, a rough shape of the work and clear next
+                  steps.
                 </p>
               </div>
-              <div className="flex flex-col items-start md:items-end gap-2 text-xs text-slate-200">
+              <div className="flex flex-col items-start md:items-end gap-2 text-xs text-slate-700">
                 <button
                   onClick={() => (window.location.href = "/start-project")}
-                  className="px-5 py-2.5 rounded-full bg-sky-500 text-slate-950 font-semibold hover:bg-sky-400 transition-all shadow-sm shadow-sky-500/50"
+                  className="px-5 py-2.5 rounded-full bg-sky-600 text-white font-semibold hover:bg-sky-500 transition-all shadow-sm shadow-sky-500/40"
                 >
                   Start a project
                 </button>
                 <div className="flex items-center gap-2">
-                  <Mail className="w-3.5 h-3.5 text-sky-400" />
+                  <Mail className="w-3.5 h-3.5 text-sky-500" />
                   <span>tvlstudioz@gmail.com</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-[11px] text-slate-400 border-t border-slate-800 pt-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-[11px] text-slate-500 border-t border-slate-100 pt-4">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-sky-500 via-emerald-400 to-teal-300 flex items-center justify-center border border-slate-900">
-                  <span className="text-slate-950 text-sm font-semibold">T</span>
+                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-sky-500 via-emerald-400 to-teal-300 flex items-center justify-center">
+                  <span className="text-slate-900 text-sm font-semibold">T</span>
                 </div>
                 <span>© 2026 TVL Studios.</span>
               </div>
               <div className="flex items-center gap-4">
                 <a
                   href="https://www.instagram.com/tvlstudios.xyz/"
-                  className="flex items-center gap-1 hover:text-slate-200 transition-colors"
+                  className="flex items-center gap-1 hover:text-slate-700 transition-colors"
                 >
                   <InstagramIcon className="w-3.5 h-3.5" />
                   Instagram
                 </a>
                 <a
                   href="/privacy-policy"
-                  className="hover:text-slate-200 transition-colors"
+                  className="hover:text-slate-700 transition-colors"
                 >
                   Privacy Policy
                 </a>
                 <a
                   href="/terms-of-service"
-                  className="hover:text-slate-200 transition-colors"
+                  className="hover:text-slate-700 transition-colors"
                 >
                   Terms of Service
                 </a>
