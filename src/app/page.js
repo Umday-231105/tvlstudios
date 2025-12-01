@@ -64,7 +64,7 @@ export default function ComingSoon() {
           {["days", "hours", "minutes", "seconds"].map((unit) => (
             <div key={unit}>
               <div className="text-4xl md:text-5xl font-bold bg-slate-900 px-5 py-3 rounded-xl border border-slate-700 shadow-lg">
-                ???//{timeLeft[unit]}
+                ??? //{timeLeft[unit]}
               </div>
               <p className="mt-2 text-sm uppercase tracking-wide text-slate-400">
                 {unit}
