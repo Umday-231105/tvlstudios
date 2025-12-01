@@ -78,13 +78,13 @@ export default function ComingSoon() {
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-sky-500/20 blur-[120px]" />
 
       {/* Simple CSS for floating marks */}
-      <style jsx global>{`
+            {/* <style jsx global>{`
         @keyframes float {
           0% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
           100% { transform: translateY(0px); }
         }
-      `}</style>
+      `}</style>*/}
     </div>
   );
 }
