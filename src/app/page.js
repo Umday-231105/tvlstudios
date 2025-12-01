@@ -30,7 +30,7 @@ export default function ComingSoon() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-white relative overflow-hidden">
       
       {/* QUESTION MARK FLOATING BACKGROUND */}
-      <div className="absolute inset-0 opacity-[0.04] select-none pointer-events-none">
+  {/* <div className="absolute inset-0 opacity-[0.04] select-none pointer-events-none">
         {[...Array(40)].map((_, i) => (
           <span
             key={i}
@@ -44,7 +44,7 @@ export default function ComingSoon() {
             ?
           </span>
         ))}
-      </div>
+      </div>*/}
 
       {/* CENTER CONTENT */}
       <div className="relative z-10 text-center px-4">
