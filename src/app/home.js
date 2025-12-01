@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -56,7 +57,7 @@ const Navbar = () => {
     >
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         
-        {/* Logo */}
+        {/* Logo */} 
         <a href="/" className="flex items-center gap-2 group">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 via-emerald-400 to-teal-300 flex items-center justify-center shadow-sm shadow-sky-500/40">
             <span className="text-slate-900 font-semibold text-lg">T</span>
@@ -66,7 +67,7 @@ const Navbar = () => {
           </span>
         </a>
 
-        {/* Desktop nav */}
+        {/* Desktop nav */} 
         <div className="hidden md:flex items-center gap-6 text-[13px] text-slate-600">
           <a href="#about" className="hover:text-slate-900 transition-colors">About</a>
           <a href="#services" className="hover:text-slate-900 transition-colors">Services</a>
