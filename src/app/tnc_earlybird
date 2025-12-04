@@ -1,0 +1,73 @@
+import React from "react";
+
+// TVL Studios — Standalone Terms & Conditions Page
+// TailwindCSS required. You can link this page separately from the landing page.
+
+export default function TVLTermsAndConditions() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white px-6 py-12 flex justify-center">
+      <div className="max-w-3xl w-full space-y-8">
+        {/* Header */}
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-wide text-center">
+          TVL Studios — Terms & Conditions
+        </h1>
+        <p className="text-center text-gray-300 text-sm md:text-base">
+          Applicable to the 50% Pre-Launch Offer
+        </p>
+
+        {/* TNC Content */}
+        <div className="bg-white/5 p-6 rounded-xl border border-white/10 space-y-4 text-gray-200 leading-relaxed text-sm md:text-base">
+          <ol className="list-decimal pl-5 space-y-3">
+            <li>
+              This pre-launch offer is valid for new clients who confirm their project
+              before the official website launch date.
+            </li>
+            <li>
+              The 50% discount applies exclusively to additional/customization charges
+              beyond the base package offered by TVL Studios.
+            </li>
+            <li>
+              Base package pricing remains unchanged. The discount does not apply to
+              the base project fee.
+            </li>
+            <li>
+              An advance payment is required to secure the discounted price. Failure to
+              complete the advance may result in offer cancellation.
+            </li>
+            <li>
+              Project commencement and delivery timelines depend on available slots and
+              workload at the time of confirmation.
+            </li>
+            <li>
+              Revisions beyond the limits mentioned in the selected package will be
+              charged at standard rates and are not part of the discounted amount.
+            </li>
+            <li>
+              The offer cannot be combined with any other promotion, coupon, or
+              discounted package offered by TVL Studios.
+            </li>
+            <li>
+              The discounted additional charges will be clearly stated in the invoice
+              shared after project evaluation.
+            </li>
+            <li>
+              TVL Studios reserves the right to modify, extend, or withdraw the offer at
+              any time without prior notice.
+            </li>
+            <li>
+              By availing this offer, the client acknowledges and agrees to all the terms
+              listed on this page.
+            </li>
+          </ol>
+        </div>
+
+        {/* Footer Navigation */}
+        <div className="text-center text-sm text-gray-400">
+          <a href="/" className="underline hover:text-white">
+            Go Back to Home Page
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
